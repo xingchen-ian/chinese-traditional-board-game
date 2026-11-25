@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>掷饮图试用（本地热座）</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #e6e4de;
+      --sheet: #f7f6f2;
+      --ink: #1c1b18;
+      --muted: #5c584f;
+      --line: #d3cfc6;
+      --accent: #1a4a40;
+      --warn: #8a3b12;
+      --serif: "Noto Serif SC", "Songti SC", "STSong", serif;
+      --sans: "Noto Sans SC", "PingFang SC", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: var(--sans);
+      line-height: 1.5;
+    }
+    header {
+      padding: 0.9rem 1.1rem 0.7rem;
+      background: var(--sheet);
+      border-bottom: 1px solid var(--line);
+    }
+    header h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    header p {
+      margin: 0.35rem 0 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+      max-width: 52rem;
+    }
+    header a { color: var(--accent); }
+    .layout {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      min-height: calc(100vh - 7rem);
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+    .side {
+      background: var(--sheet);
+      border-right: 1px solid var(--line);
+      padding: 0.9rem 1rem 1.4rem;
+      overflow: auto;
+    }
+    .side h2 {
+      margin: 0.85rem 0 0.4rem;
+      font-family: var(--serif);
+      font-size: 1rem;
+    }
+    .side h2:first-child { margin-top: 0; }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+      margin: 0.4rem 0;
+    }
+    label.inline {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    select, input[type="number"], input[type="text"] {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 0.3rem 0.45rem;
+      font: inherit;
+      background: #fff;
+    }
+    button {
+      appearance: none;
+      border: 1px solid #b8b3a6;
+      background: #fff;
+      color: var(--ink);
+      border-radius: 4px;
+      padding: 0.35rem 0.7rem;
+      font: inherit;
+      font-size: 0.86rem;
+      cursor: pointer;
+    }
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .file { display: inline-flex; }
+    .file input { display: none; }
+    .warn { color: var(--warn); font-size: 0.82rem; }
+    .ok { color: var(--accent); font-size: 0.82rem; }
+    .players { list-style: none; margin: 0.4rem 0; padding: 0; }
+    .players li {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.28rem 0.4rem;
+      border: 1px solid var(--line);
+      margin-bottom: 0.3rem;
+      font-size: 0.86rem;
+    }
+    .players li.is-turn { border-color: var(--ink); background: #e7efe9; }
+    .players li.is-out { opacity: 0.45; text-decoration: line-through; }
+    .dot {
+      width: 0.85rem;
+      height: 0.85rem;
+      border-radius: 50%;
+      border: 1px solid var(--ink);
+      flex: 0 0 auto;
+    }
+    #msg {
+      margin: 0.5rem 0 0;
+      font-size: 0.9rem;
+      min-height: 2.4rem;
+    }
+    .log {
+      margin: 0.4rem 0 0;
+      padding: 0;
+      list-style: none;
+      max-height: 12rem;
+      overflow: auto;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .log li {
+      padding: 0.25rem 0;
+      border-top: 1px solid var(--line);
+    }
+    .stage-wrap {
+      overflow: auto;
+      padding: 1rem;
+      background: #cfc9bb;
+    }
+    .stage {
+      position: relative;
+      margin: 0 auto;
+      box-shadow: 0 8px 28px rgba(40, 30, 10, 0.22);
+      background: #e8d9b8;
+      user-select: none;
+    }
+    .underlay-row {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      pointer-events: none;
+    }
+    .underlay-row img {
+      display: block;
+      flex: 0 0 auto;
+      height: auto;
+    }
+    svg.overlay {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .edge { stroke: #1a4a40; stroke-width: 1.4; fill: none; opacity: 0.55; }
+    .node circle, .node rect {
+      fill: rgba(255, 252, 245, 0.5);
+      stroke: #6a4a3a;
+      stroke-width: 1.3;
+    }
+    .node.filled circle, .node.filled rect {
+      fill: rgba(232, 245, 236, 0.72);
+      stroke: var(--accent);
+    }
+    .node.start circle { stroke: #0b5fff; stroke-width: 2.2; }
+    .node.goal circle { stroke: #8a1f12; stroke-width: 2.2; }
+    .node.choice circle, .node.choice rect {
+      fill: rgba(255, 220, 120, 0.9);
+      stroke: #c45c00;
+      stroke-width: 2.6;
+      cursor: pointer;
+    }
+    .node.here circle { stroke-width: 2.4; }
+    .node text {
+      fill: #1c1b18;
+      font-family: var(--serif);
+      font-size: 10px;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      pointer-events: none;
+    }
+    .token-g { pointer-events: none; }
+    .token-g circle { stroke: #1c1b18; stroke-width: 1.2; }
+    .token-g text {
+      fill: #fff;
+      stroke: #1c1b18;
+      stroke-width: 0.45;
+      paint-order: stroke fill;
+      font-family: var(--sans);
+      font-size: 9px;
+      font-weight: 600;
+      text-anchor: middle;
+      dominant-baseline: central;
+    }
+    #land-card {
+      margin-top: 0.6rem;
+      padding: 0.55rem 0.6rem;
+      border: 1px solid var(--warn);
+      background: #fff6ee;
+      font-size: 0.86rem;
+    }
+    #land-card[hidden] { display: none; }
+    #land-card strong { display: block; font-family: var(--serif); margin-bottom: 0.25rem; }
+    #land-card .land-note { margin: 0.2rem 0; color: var(--ink); }
+    #land-card .land-allusion { margin: 0.2rem 0; color: #4a3a18; }
+    #land-card .land-result { margin: 0.2rem 0 0; color: var(--warn); }
+    button[aria-pressed="true"].music { background: var(--accent); color: #fff; border-color: var(--accent); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>掷饮图试用</h1>
+    <p>
+      本地热座，同一屏幕轮流。定马与一骰走路依吴陈琰本凡例骨架；<strong>酒量出局是现代家规</strong>，不是原法。
+      旁注只粗读「一杯／各一杯」一类句式，认不出则<strong>待核、本句不加杯</strong>。
+      印本系属待核，不要和高兆本混称。
+      <a href="transcribe.html">录文台</a>
+      · <a href="../play.html">玩法</a>
+      · <a href="../index.html">揽胜图</a>
+    </p>
+  </header>
+
+  <div class="layout">
+    <aside class="side">
+      <h2>棋盘数据</h2>
+      <p id="data-status" class="warn">尚未载入。</p>
+      <div class="row">
+        <label class="file"><span>导入 JSON</span><input type="file" id="import" accept="application/json,.json"></label>
+        <button type="button" id="btn-from-transcribe">读录文台</button>
+      </div>
+
+      <h2>开局</h2>
+      <div class="row">
+        <label class="inline" for="player-count">人数</label>
+        <select id="player-count">
+          <option value="2">2</option>
+          <option value="3" selected>3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+        <label class="inline" for="limit">酒量</label>
+        <input id="limit" type="number" min="5" max="20" value="10">
+      </div>
+      <div class="row" id="start-row" hidden>
+        <label class="inline" for="start-pick">起点</label>
+        <select id="start-pick"></select>
+      </div>
+      <div id="name-fields" class="row"></div>
+      <div class="row">
+        <button type="button" class="primary" id="start-btn">开始定马</button>
+        <button type="button" id="restart-btn">重来</button>
+        <button type="button" class="music" id="music-btn" aria-pressed="false">音乐</button>
+      </div>
+
+      <h2>这一局</h2>
+      <ul class="players" id="player-list"></ul>
+      <div class="row">
+        <button type="button" class="primary" id="roll-btn" disabled>掷骰</button>
+      </div>
+      <p id="msg" aria-live="polite"></p>
+      <div id="land-card" hidden>
+        <strong id="land-title"></strong>
+        <p class="land-note" id="land-note"></p>
+        <p class="land-allusion" id="land-allusion"></p>
+        <p class="land-result" id="land-result"></p>
+      </div>
+      <ol class="log" id="log"></ol>
+      <p class="warn">v1 不做：本采、回马逆行、占格不许停、联网。</p>
+    </aside>
+
+    <div class="stage-wrap">
+      <div class="stage" id="stage">
+        <div class="underlay-row" id="underlay-row">
+          <img id="img-left" alt="">
+          <img id="img-right" alt="">
+        </div>
+        <svg class="overlay" id="svg" xmlns="http://www.w3.org/2000/svg">
+          <g id="layer-board"></g>
+          <g id="layer-tokens"></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  const TRANSCRIBE_KEY = "zhiyin-transcribe-v1";
+  const ROLES = ["渔父", "羽士", "剑侠", "美人", "缁衣", "词客"];
+  const ROLE_COLORS = {
+    渔父: "#2c6aa0",
+    羽士: "#6b4ea3",
+    剑侠: "#b54a2a",
+    美人: "#c45c7a",
+    缁衣: "#2b2b2b",
+    词客: "#1a4a40",
+  };
+  const CN_NUM = { 一: 1, 二: 2, 两: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9, 十: 10 };
+
+  const state = {
+    data: null,
+    graph: null,
+    startId: null,
+    goalId: null,
+    players: [],
+    turn: 0,
+    phase: "idle", // idle | assign | play | choose | over
+    remaining: 0,
+    fromId: null,
+    prevId: null,
+    choices: [],
+    limit: 10,
+    fly: null,
+    busy: false,
+  };
+
+  const audio = {
+    ctx: null,
+    master: null,
+    musicGain: null,
+    sfxGain: null,
+    musicOn: false,
+    timer: null,
+    step: 0,
+  };
+
+  function ensureAudio() {
+    if (audio.ctx) return audio.ctx;
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return null;
+    audio.ctx = new Ctx();
+    audio.master = audio.ctx.createGain();
+    audio.master.gain.value = 0.7;
+    audio.master.connect(audio.ctx.destination);
+    audio.musicGain = audio.ctx.createGain();
+    audio.musicGain.gain.value = 0.12;
+    audio.musicGain.connect(audio.master);
+    audio.sfxGain = audio.ctx.createGain();
+    audio.sfxGain.gain.value = 0.55;
+    audio.sfxGain.connect(audio.master);
+    return audio.ctx;
+  }
+
+  function pentatonic(i) {
+    const scale = [196.0, 220.0, 261.63, 293.66, 329.63, 392.0, 440.0];
+    return scale[((i % scale.length) + scale.length) % scale.length];
+  }
+
+  function pluck(freq, t, dur, gainNode) {
+    const ctx = audio.ctx;
+    if (!ctx) return;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    const f = ctx.createBiquadFilter();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(freq, t);
+    osc.frequency.exponentialRampToValueAtTime(freq * 0.985, t + dur);
+    f.type = "lowpass";
+    f.frequency.setValueAtTime(900, t);
+    f.frequency.exponentialRampToValueAtTime(280, t + dur);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.45, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    osc.connect(f);
+    f.connect(g);
+    g.connect(gainNode);
+    osc.start(t);
+    osc.stop(t + dur + 0.02);
+  }
+
+  function tickMusic() {
+    if (!audio.musicOn || !audio.ctx) return;
+    const ctx = audio.ctx;
+    const beat = 0.52;
+    const now = ctx.currentTime + 0.04;
+    const phrase = [0, 2, 4, 2, 5, 4, 2, 0, 4, 5, 3, 2, 0, 2, 4, 0];
+    const drone = [0, 0, 4, 4];
+    for (let i = 0; i < 4; i++) {
+      const t = now + i * beat;
+      const idx = (audio.step + i) % phrase.length;
+      pluck(pentatonic(phrase[idx]), t, 0.7, audio.musicGain);
+      if (i % 2 === 0) {
+        pluck(pentatonic(drone[(idx % 4)]) * 0.5, t, 1.1, audio.musicGain);
+      }
+    }
+    audio.step = (audio.step + 4) % phrase.length;
+  }
+
+  function startMusic() {
+    const ctx = ensureAudio();
+    if (!ctx) return;
+    if (ctx.state === "suspended") ctx.resume();
+    audio.musicOn = true;
+    audio.step = 0;
+    if (audio.timer) clearInterval(audio.timer);
+    tickMusic();
+    audio.timer = setInterval(tickMusic, 2080);
+    const btn = document.getElementById("music-btn");
+    btn.setAttribute("aria-pressed", "true");
+    btn.textContent = "音乐开";
+  }
+
+  function stopMusic() {
+    audio.musicOn = false;
+    if (audio.timer) {
+      clearInterval(audio.timer);
+      audio.timer = null;
+    }
+    const btn = document.getElementById("music-btn");
+    btn.setAttribute("aria-pressed", "false");
+    btn.textContent = "音乐";
+  }
+
+  function duckMusic(on) {
+    if (!audio.musicGain || !audio.ctx) return;
+    audio.musicGain.gain.setTargetAtTime(on ? 0.035 : 0.12, audio.ctx.currentTime, 0.08);
+  }
+
+  function playGulp() {
+    const ctx = ensureAudio();
+    if (!ctx) return;
+    if (ctx.state === "suspended") ctx.resume();
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    const f = ctx.createBiquadFilter();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(210, t);
+    osc.frequency.exponentialRampToValueAtTime(90, t + 0.16);
+    f.type = "lowpass";
+    f.frequency.value = 700;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.8, t + 0.03);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.2);
+    osc.connect(f);
+    f.connect(g);
+    g.connect(audio.sfxGain);
+    osc.start(t);
+    osc.stop(t + 0.22);
+    const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.12), ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (data.length * 0.25));
+    const noise = ctx.createBufferSource();
+    noise.buffer = buf;
+    const ng = ctx.createGain();
+    const nf = ctx.createBiquadFilter();
+    nf.type = "bandpass";
+    nf.frequency.value = 400;
+    ng.gain.setValueAtTime(0.35, t);
+    ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+    noise.connect(nf);
+    nf.connect(ng);
+    ng.connect(audio.sfxGain);
+    noise.start(t);
+  }
+
+  function gulpTimes(n) {
+    const count = Math.max(0, Math.min(6, n | 0));
+    return new Promise((resolve) => {
+      if (!count) {
+        resolve();
+        return;
+      }
+      let i = 0;
+      const tick = () => {
+        playGulp();
+        i += 1;
+        if (i >= count) setTimeout(resolve, 220);
+        else setTimeout(tick, 240);
+      };
+      tick();
+    });
+  }
+
+  const els = {
+    dataStatus: document.getElementById("data-status"),
+    count: document.getElementById("player-count"),
+    limit: document.getElementById("limit"),
+    names: document.getElementById("name-fields"),
+    list: document.getElementById("player-list"),
+    msg: document.getElementById("msg"),
+    log: document.getElementById("log"),
+    roll: document.getElementById("roll-btn"),
+    stage: document.getElementById("stage"),
+    svg: document.getElementById("svg"),
+    imgL: document.getElementById("img-left"),
+    imgR: document.getElementById("img-right"),
+  };
+
+  function escapeXml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function normalizeLabel(s) {
+    return String(s || "").replace(/\s+/g, "").trim();
+  }
+
+  function isStartName(label) {
+    const t = normalizeLabel(label);
+    return t === "劳劳亭" || t === "勞勞亭" || t === "劳劳山亭" || t === "勞勞山亭";
+  }
+
+  function isGoalName(label) {
+    const t = normalizeLabel(label);
+    return t === "观止" || t === "觀止";
+  }
+
+  function spreadOrder(data) {
+    return data.spreadOrder === "ab" ? "ab" : "ba";
+  }
+
+  function orderedIds(data) {
+    return spreadOrder(data) === "ba" ? ["b", "a"] : ["a", "b"];
+  }
+
+  function panelOf(pid) {
+    return state.data.panels[pid];
+  }
+
+  function offsetX(pid) {
+    const ids = orderedIds(state.data);
+    if (pid === ids[0]) return 0;
+    return panelOf(ids[0]).width;
+  }
+
+  function nodePanel(n) {
+    if (n.panel === "a" || n.panel === "b") return n.panel;
+    return String(n.id).startsWith("b-") ? "b" : "a";
+  }
+
+  function viewOf(n) {
+    return { x: n.x + offsetX(nodePanel(n)), y: n.y };
+  }
+
+  function allNodes() {
+    return [...(panelOf("a").nodes || []), ...(panelOf("b").nodes || [])];
+  }
+
+  function nodeById(id) {
+    return allNodes().find((n) => n.id === id) || null;
+  }
+
+  function buildGraph() {
+    const nodes = allNodes();
+    const adj = {};
+    for (const n of nodes) adj[n.id] = [];
+    const raw = [];
+    for (const pid of ["a", "b"]) {
+      for (const e of panelOf(pid).edges || []) raw.push(e);
+    }
+    for (const e of state.data.crossEdges || []) raw.push(e);
+    for (const e of raw) {
+      if (!adj[e.from] || !adj[e.to]) continue;
+      if (!adj[e.from].includes(e.to)) adj[e.from].push(e.to);
+      if (!adj[e.to].includes(e.from)) adj[e.to].push(e.from);
+    }
+    const start =
+      nodes.find((n) => isStartName(n.label)) ||
+      nodes.find((n) => n.start) ||
+      (state.startId ? nodes.find((n) => n.id === state.startId) : null) ||
+      null;
+    const goal = nodes.find((n) => isGoalName(n.label)) || null;
+    const level = {};
+    if (start) {
+      const q = [start.id];
+      level[start.id] = 0;
+      while (q.length) {
+        const cur = q.shift();
+        for (const nb of adj[cur] || []) {
+          if (level[nb] == null) {
+            level[nb] = level[cur] + 1;
+            q.push(nb);
+          }
+        }
+      }
+    }
+    state.graph = { adj, level };
+    state.startId = start ? start.id : null;
+    state.goalId = goal ? goal.id : null;
+  }
+
+  function viewSize() {
+    const ids = orderedIds(state.data);
+    let w = 0;
+    let h = 0;
+    for (const pid of ids) {
+      const p = panelOf(pid);
+      w += p.width;
+      h = Math.max(h, p.height);
+    }
+    return { width: w, height: h };
+  }
+
+  function verticalLabel(text) {
+    const t = normalizeLabel(text);
+    if (!t) return "·";
+    const s = t.slice(0, 4);
+    return s.split("").join("\n");
+  }
+
+  function tokenAnchor(player, cellId) {
+    const n = nodeById(cellId);
+    if (!n) return { x: 0, y: 0 };
+    const v = viewOf(n);
+    const group = state.players
+      .filter((o) => o.alive && (o.cell === cellId || o === player))
+      .sort((a, b) => a.index - b.index);
+    const i = Math.max(0, group.findIndex((o) => o.index === player.index));
+    const count = Math.max(1, group.length);
+    const spacing = 30;
+    return {
+      x: v.x + (i - (count - 1) / 2) * spacing,
+      y: v.y + 26,
+    };
+  }
+
+  function renderTokens() {
+    const layer = document.getElementById("layer-tokens");
+    if (!layer) return;
+    layer.innerHTML = state.players
+      .map((p) => {
+        if (!p.cell) return "";
+        const pos =
+          state.fly && state.fly.index === p.index
+            ? { x: state.fly.x, y: state.fly.y }
+            : tokenAnchor(p, p.cell);
+        const label = p.role || String(p.index + 1);
+        const faded = p.alive ? "1" : "0.4";
+        return (
+          `<g class="token-g" id="tok-${p.index}" transform="translate(${pos.x},${pos.y})" opacity="${faded}">` +
+          `<circle r="12" fill="${p.color}" />` +
+          `<text>${escapeXml(label)}</text></g>`
+        );
+      })
+      .join("");
+  }
+
+  function renderBoard() {
+    if (!state.data) return;
+    const ids = orderedIds(state.data);
+    const size = viewSize();
+    els.stage.style.width = size.width + "px";
+    els.svg.setAttribute("viewBox", `0 0 ${size.width} ${size.height}`);
+    els.imgL.src = panelOf(ids[0]).image;
+    els.imgL.style.width = panelOf(ids[0]).width + "px";
+    els.imgR.src = panelOf(ids[1]).image;
+    els.imgR.style.width = panelOf(ids[1]).width + "px";
+    els.imgL.style.opacity = "0.88";
+    els.imgR.style.opacity = "0.88";
+
+    const here = currentPlayer() && currentPlayer().alive ? currentPlayer().cell : null;
+    const choiceSet = new Set(state.choices);
+    const edges = [];
+    for (const pid of ["a", "b"]) {
+      for (const e of panelOf(pid).edges || []) edges.push(e);
+    }
+    for (const e of state.data.crossEdges || []) edges.push(e);
+
+    let svg = "";
+    for (const e of edges) {
+      const a = nodeById(e.from);
+      const b = nodeById(e.to);
+      if (!a || !b) continue;
+      const av = viewOf(a);
+      const bv = viewOf(b);
+      svg += `<line class="edge" x1="${av.x}" y1="${av.y}" x2="${bv.x}" y2="${bv.y}" />`;
+    }
+    for (const n of allNodes()) {
+      const v = viewOf(n);
+      const r = n.r || 14;
+      const cls = [
+        "node",
+        n.label ? "filled" : "",
+        n.id === state.startId ? "start" : "",
+        n.id === state.goalId ? "goal" : "",
+        n.id === here ? "here" : "",
+        choiceSet.has(n.id) ? "choice" : "",
+      ]
+        .filter(Boolean)
+        .join(" ");
+      let shape;
+      if (n.shape === "rect") {
+        const s = r * 1.7;
+        shape = `<rect x="${v.x - s / 2}" y="${v.y - s / 2}" width="${s}" height="${s}" rx="2" />`;
+      } else {
+        shape = `<circle cx="${v.x}" cy="${v.y}" r="${r}" />`;
+      }
+      const lines = verticalLabel(n.label).split("\n");
+      const text = lines
+        .map((line, i) => {
+          const dy = (i - (lines.length - 1) / 2) * 10;
+          return `<text x="${v.x}" y="${v.y + dy}">${escapeXml(line)}</text>`;
+        })
+        .join("");
+      svg += `<g class="${cls}" data-id="${n.id}">${shape}${text}</g>`;
+    }
+    const board = document.getElementById("layer-board");
+    if (board) board.innerHTML = svg;
+    renderTokens();
+  }
+
+  function animateToken(player, fromId, toId) {
+    return new Promise((resolve) => {
+      const a = tokenAnchor(player, fromId);
+      const b = tokenAnchor(player, toId);
+      state.fly = { index: player.index, x: a.x, y: a.y };
+      renderTokens();
+      const g = document.getElementById("tok-" + player.index);
+      const t0 = performance.now();
+      const dur = 420;
+      function tick(now) {
+        const k = Math.min(1, (now - t0) / dur);
+        const e = k * k * (3 - 2 * k);
+        const x = a.x + (b.x - a.x) * e;
+        const y = a.y + (b.y - a.y) * e;
+        state.fly.x = x;
+        state.fly.y = y;
+        if (g) g.setAttribute("transform", `translate(${x},${y})`);
+        if (k < 1) requestAnimationFrame(tick);
+        else {
+          state.fly = null;
+          resolve();
+        }
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+
+  function speakAsync(text) {
+    return new Promise((resolve) => {
+      if (!text || !window.speechSynthesis) {
+        resolve();
+        return;
+      }
+      window.speechSynthesis.cancel();
+      duckMusic(true);
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "zh-CN";
+      u.rate = 0.92;
+      const done = () => {
+        u.onend = null;
+        u.onerror = null;
+        duckMusic(false);
+        resolve();
+      };
+      u.onend = done;
+      u.onerror = done;
+      window.speechSynthesis.speak(u);
+    });
+  }
+
+  function showLand(title, note, allusion, result) {
+    const card = document.getElementById("land-card");
+    document.getElementById("land-title").textContent = title;
+    document.getElementById("land-note").textContent = note ? "旁注：" + note : "（无旁注）";
+    const al = document.getElementById("land-allusion");
+    al.textContent = allusion ? "典故：" + allusion : "";
+    al.hidden = !allusion;
+    document.getElementById("land-result").textContent = result;
+    card.hidden = false;
+  }
+
+  function setData(data) {
+    if (!data || !data.panels || !data.panels.a || !data.panels.b) {
+      throw new Error("缺 panels.a / panels.b");
+    }
+    data.panels.a.image = "./assets/zhiyin-panel-a.jpg";
+    data.panels.b.image = "./assets/zhiyin-panel-b.jpg";
+    if (!Array.isArray(data.crossEdges)) data.crossEdges = [];
+    state.data = data;
+    buildGraph();
+    const n = allNodes().length;
+    const labeled = allNodes().filter((x) => x.label).length;
+    const bits = [
+      `${n} 格，已填 ${labeled}`,
+      `合页序 ${spreadOrder(data)}`,
+    ];
+    if (state.startId) bits.push("起点「" + nodeById(state.startId).label + "」");
+    else bits.push("无劳劳亭，待补起点");
+    if (state.goalId) bits.push("终点「" + nodeById(state.goalId).label + "」");
+    else bits.push("无观止，仅能靠酒量淘汰分胜负");
+    els.dataStatus.className = state.startId ? "ok" : "warn";
+    els.dataStatus.textContent = bits.join(" · ");
+    const startRow = document.getElementById("start-row");
+    const startPick = document.getElementById("start-pick");
+    if (!state.startId) {
+      startRow.hidden = false;
+      startPick.innerHTML = allNodes()
+        .filter((n) => n.label)
+        .map((n) => `<option value="${escapeXml(n.id)}">${escapeXml(n.label)}</option>`)
+        .join("");
+    } else {
+      startRow.hidden = true;
+      startPick.innerHTML = "";
+    }
+    renderBoard();
+  }
+
+  function log(line) {
+    const li = document.createElement("li");
+    li.textContent = line;
+    els.log.prepend(li);
+  }
+
+  function say(text) {
+    els.msg.textContent = text;
+  }
+
+  function currentPlayer() {
+    return state.players[state.turn] || null;
+  }
+
+  function living() {
+    return state.players.filter((p) => p.alive);
+  }
+
+  function renderPlayers() {
+    els.list.innerHTML = state.players
+      .map((p, i) => {
+        const cls = [
+          i === state.turn && state.phase !== "idle" && state.phase !== "over" ? "is-turn" : "",
+          p.alive ? "" : "is-out",
+        ]
+          .filter(Boolean)
+          .join(" ");
+        const role = p.role || "未定马";
+        const cell = p.cell && nodeById(p.cell) ? nodeById(p.cell).label || p.cell : "—";
+        return `<li class="${cls}"><span class="dot" style="background:${p.color}"></span>${p.name} · ${role} · ${p.cups}/${state.limit} · ${cell}</li>`;
+      })
+      .join("");
+  }
+
+  function buildNameFields() {
+    const n = Number(els.count.value);
+    els.names.innerHTML = "";
+    for (let i = 0; i < n; i++) {
+      const inp = document.createElement("input");
+      inp.type = "text";
+      inp.id = "pn-" + i;
+      inp.placeholder = "玩家" + (i + 1);
+      inp.value = "玩家" + (i + 1);
+      els.names.appendChild(inp);
+    }
+  }
+
+  function d6() {
+    return 1 + Math.floor(Math.random() * 6);
+  }
+
+  function startAssign() {
+    if (!state.data) {
+      say("先载入棋盘。");
+      return;
+    }
+    if (!state.startId) {
+      const pick = document.getElementById("start-pick").value;
+      if (!pick) {
+        say("没有劳劳亭。请在下拉里指定一个起点，或回录文台把开局格写成「劳劳亭」。");
+        return;
+      }
+      state.startId = pick;
+      buildGraph();
+      log("起点未写劳劳亭，本局指定为「" + (nodeById(pick).label || pick) + "」（待核）。");
+    }
+    const n = Number(els.count.value);
+    const limit = Math.max(5, Math.min(20, Number(els.limit.value) || 10));
+    state.limit = limit;
+    state.players = [];
+    for (let i = 0; i < n; i++) {
+      const inp = document.getElementById("pn-" + i);
+      state.players.push({
+        index: i,
+        name: (inp && inp.value.trim()) || "玩家" + (i + 1),
+        role: null,
+        color: "#888",
+        cell: state.startId,
+        cups: 0,
+        alive: true,
+      });
+    }
+    state.turn = 0;
+    state.phase = "assign";
+    els.log.innerHTML = "";
+    els.roll.disabled = false;
+    els.roll.textContent = "掷定马";
+    renderPlayers();
+    renderBoard();
+    say(state.players[0].name + " 掷定马（吴本：1渔父 2羽士 3剑侠 4美人 5缁衣 6词客）。撞色重掷。");
+    log("开局。酒量上限 " + limit + "（家规）。起点 " + nodeById(state.startId).label + "。");
+    startMusic();
+  }
+
+  function takenRoles() {
+    return new Set(state.players.map((p) => p.role).filter(Boolean));
+  }
+
+  function assignRoll() {
+    const p = currentPlayer();
+    let face;
+    let role;
+    const taken = takenRoles();
+    do {
+      face = d6();
+      role = ROLES[face - 1];
+    } while (taken.has(role));
+    p.role = role;
+    p.color = ROLE_COLORS[role];
+    log(p.name + " 掷 " + face + "，定马 " + role + (face !== undefined && taken.size ? "" : "") + "。");
+    const nextUnset = state.players.findIndex((x) => !x.role);
+    if (nextUnset < 0) {
+      state.phase = "play";
+      state.turn = 0;
+      els.roll.textContent = "掷骰";
+      say("定马完毕。从劳劳亭出发。" + state.players[0].name + "（" + state.players[0].role + "）先走。");
+      log("进入行棋。");
+    } else {
+      state.turn = nextUnset;
+      say(state.players[state.turn].name + " 掷定马。");
+    }
+    renderPlayers();
+    renderBoard();
+  }
+
+  function parseCnCount(token) {
+    if (!token) return 1;
+    if (CN_NUM[token] != null) return CN_NUM[token];
+    const n = Number(token);
+    return Number.isFinite(n) ? n : 1;
+  }
+
+  function parseDrinks(note, role, meeting) {
+    const text = String(note || "").trim();
+    const result = { self: 0, all: 0, pending: false, lines: [] };
+    if (!text) {
+      result.lines.push("无旁注");
+      return result;
+    }
+    const clauses = text.split(/[；;。！？!，,\n]/).map((s) => s.trim()).filter(Boolean);
+    const parts = clauses.length ? clauses : [text];
+    for (const c of parts) {
+      const mentioned = ROLES.filter((r) => c.includes(r));
+      const hasHui = c.includes("会") || c.includes("會");
+      if (hasHui && !meeting) {
+        result.lines.push("会：无人同格，跳过「" + c + "」");
+        continue;
+      }
+      if (mentioned.length && !mentioned.includes(role)) {
+        result.lines.push("非本色，跳过「" + c + "」");
+        continue;
+      }
+      const each = c.match(/各\s*([一二两三四五六七八九十\d])?\s*杯/);
+      const fine = c.match(/罚\s*([一二两三四五六七八九十\d])?\s*杯/);
+      const cup = c.match(/([一二两三四五六七八九十\d])\s*杯/);
+      if (each) {
+        const n = parseCnCount(each[1]);
+        result.all += n;
+        result.lines.push("各 " + n + " 杯：" + c);
+      } else if (fine) {
+        const n = parseCnCount(fine[1]);
+        result.self += n;
+        result.lines.push("罚 " + n + " 杯：" + c);
+      } else if (cup) {
+        const n = parseCnCount(cup[1]);
+        result.self += n;
+        result.lines.push(n + " 杯：" + c);
+      } else if (/杯/.test(c)) {
+        result.pending = true;
+        result.lines.push("待核（有杯未解析）：" + c);
+      }
+    }
+    return result;
+  }
+
+  function applyDrinks(mover, parsed) {
+    if (parsed.all) {
+      for (const p of living()) p.cups += parsed.all;
+    }
+    if (parsed.self) mover.cups += parsed.self;
+    for (const p of state.players) {
+      if (p.alive && p.cups >= state.limit) {
+        p.alive = false;
+        log(p.name + " 酒量已满（" + p.cups + "/" + state.limit + "），出局。");
+      }
+    }
+  }
+
+  function checkWin(preferGoalPlayer) {
+    if (preferGoalPlayer && preferGoalPlayer.alive !== false) {
+      state.phase = "over";
+      els.roll.disabled = true;
+      say(preferGoalPlayer.name + "（" + preferGoalPlayer.role + "）先到观止，获胜。");
+      log("终局：观止。");
+      renderPlayers();
+      renderBoard();
+      return true;
+    }
+    const left = living();
+    if (left.length === 1) {
+      state.phase = "over";
+      els.roll.disabled = true;
+      say(left[0].name + "（" + left[0].role + "）场上只剩一人，获胜。");
+      log("终局：最后一人。");
+      renderPlayers();
+      renderBoard();
+      return true;
+    }
+    if (left.length === 0) {
+      state.phase = "over";
+      els.roll.disabled = true;
+      say("无人存活，本局无胜者。");
+      log("终局：全灭。");
+      renderPlayers();
+      return true;
+    }
+    return false;
+  }
+
+  function nextAlive(from) {
+    const n = state.players.length;
+    for (let k = 1; k <= n; k++) {
+      const i = (from + k) % n;
+      if (state.players[i].alive) return i;
+    }
+    return from;
+  }
+
+  function forwardCandidates(fromId, prevId) {
+    const nbs = (state.graph.adj[fromId] || []).slice();
+    const lv = state.graph.level;
+    const up = nbs.filter((id) => lv[id] != null && lv[fromId] != null && lv[id] > lv[fromId]);
+    if (up.length === 1) return up;
+    if (up.length > 1) return up;
+    const rest = nbs.filter((id) => id !== prevId);
+    if (rest.length) return rest;
+    return nbs;
+  }
+
+  async function landAndSettle() {
+    const p = currentPlayer();
+    const cell = nodeById(p.cell);
+    const label = (cell && cell.label) || p.cell;
+    const note = (cell && cell.note) || "";
+    const allusion = (cell && cell.allusion && String(cell.allusion).trim()) || "";
+    state.busy = true;
+    els.roll.disabled = true;
+
+    if (state.goalId && p.cell === state.goalId) {
+      showLand(p.role + " 落到「" + label + "」", note, allusion, "先到观止，获胜。");
+      if (allusion) {
+        say("读典故中…");
+        await speakAsync(p.role + "至" + label + "。" + allusion);
+      }
+      checkWin(p);
+      state.busy = false;
+      return;
+    }
+    const meeting = state.players.some((o) => o !== p && o.alive && o.cell === p.cell);
+    const parsed = parseDrinks(note, p.role, meeting);
+    for (const line of parsed.lines) log(p.name + " · " + line);
+    const drinkCount = parsed.self + parsed.all * living().length;
+    let result = "本格无饮酒。";
+    if (parsed.all && parsed.self) {
+      result = p.role + "饮 " + parsed.self + " 杯，在场各饮 " + parsed.all + " 杯。";
+    } else if (parsed.all) {
+      result = "在场各饮 " + parsed.all + " 杯。";
+    } else if (parsed.self) {
+      result = p.role + "饮 " + parsed.self + " 杯。";
+    } else if (parsed.pending) {
+      result = "旁注有杯，句式待核，本格不加杯。";
+    }
+    showLand(p.role + " 落到「" + label + "」", note, allusion, result);
+    if (allusion) {
+      say("读典故中，请稍候…");
+      log("典故：" + allusion);
+      await speakAsync(p.role + "至" + label + "。" + allusion);
+    }
+    if (parsed.self || parsed.all) {
+      await gulpTimes(Math.max(1, parsed.self + parsed.all));
+    }
+    applyDrinks(p, parsed);
+    renderPlayers();
+    renderBoard();
+    if (checkWin(null)) {
+      state.busy = false;
+      return;
+    }
+    state.turn = nextAlive(state.turn);
+    state.phase = "play";
+    state.busy = false;
+    els.roll.disabled = false;
+    const nxt = currentPlayer();
+    say(nxt.name + "（" + nxt.role + "）掷骰。");
+    renderPlayers();
+    renderBoard();
+  }
+
+  async function stepOnce() {
+    const p = currentPlayer();
+    const cands = forwardCandidates(state.fromId, state.prevId);
+    if (!cands.length) {
+      log(p.name + " 无路可走，停在 " + (nodeById(p.cell).label || p.cell) + "。");
+      state.remaining = 0;
+      state.choices = [];
+      await landAndSettle();
+      return;
+    }
+    if (cands.length === 1) {
+      await takeStep(cands[0]);
+      return;
+    }
+    state.phase = "choose";
+    state.choices = cands;
+    els.roll.disabled = true;
+    say("岔路：点选下一格（余 " + state.remaining + " 步）。");
+    renderBoard();
+  }
+
+  async function takeStep(nextId) {
+    if (state.busy) return;
+    const p = currentPlayer();
+    const fromId = p.cell;
+    state.choices = [];
+    state.busy = true;
+    els.roll.disabled = true;
+    renderBoard();
+    await animateToken(p, fromId, nextId);
+    state.prevId = fromId;
+    p.cell = nextId;
+    state.fromId = nextId;
+    state.remaining -= 1;
+    renderPlayers();
+    renderBoard();
+    if (state.goalId && nextId === state.goalId) {
+      await landAndSettle();
+      return;
+    }
+    if (state.remaining <= 0) {
+      await landAndSettle();
+      return;
+    }
+    state.busy = false;
+    state.phase = "play";
+    await stepOnce();
+  }
+
+  async function playRoll() {
+    if (state.busy) return;
+    const p = currentPlayer();
+    const face = d6();
+    state.remaining = face;
+    state.fromId = p.cell;
+    state.prevId = null;
+    els.roll.disabled = true;
+    log(p.name + " 掷 " + face + "。");
+    say(p.name + " 走 " + face + " 步。");
+    await stepOnce();
+  }
+
+  els.roll.addEventListener("click", () => {
+    if (state.busy) return;
+    if (state.phase === "assign") assignRoll();
+    else if (state.phase === "play") playRoll();
+  });
+
+  els.svg.addEventListener("click", (evt) => {
+    if (state.phase !== "choose" || state.busy) return;
+    const g = evt.target.closest("g.node");
+    if (!g) return;
+    const id = g.dataset.id;
+    if (!state.choices.includes(id)) return;
+    takeStep(id);
+  });
+
+  document.getElementById("start-btn").addEventListener("click", startAssign);
+  document.getElementById("restart-btn").addEventListener("click", () => {
+    state.phase = "idle";
+    state.players = [];
+    state.choices = [];
+    state.busy = false;
+    state.fly = null;
+    els.roll.disabled = true;
+    els.roll.textContent = "掷骰";
+    els.log.innerHTML = "";
+    document.getElementById("land-card").hidden = true;
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    duckMusic(false);
+    say("已重置。");
+    renderPlayers();
+    renderBoard();
+  });
+
+  document.getElementById("music-btn").addEventListener("click", () => {
+    ensureAudio();
+    if (audio.musicOn) stopMusic();
+    else startMusic();
+  });
+
+  els.count.addEventListener("change", buildNameFields);
+
+  document.getElementById("import").addEventListener("change", async (evt) => {
+    const file = evt.target.files && evt.target.files[0];
+    if (!file) return;
+    try {
+      setData(JSON.parse(await file.text()));
+      say("已导入 " + file.name + "。");
+    } catch (err) {
+      say("导入失败：" + err.message);
+    }
+    evt.target.value = "";
+  });
+
+  document.getElementById("btn-from-transcribe").addEventListener("click", () => {
+    const raw = localStorage.getItem(TRANSCRIBE_KEY);
+    if (!raw) {
+      say("本机没有录文台数据。请先在同端口打开录文台，或导入 JSON。");
+      return;
+    }
+    try {
+      setData(JSON.parse(raw));
+      say("已从录文台读取。");
+    } catch (err) {
+      say("录文台数据读失败：" + err.message);
+    }
+  });
+
+  async function boot() {
+    buildNameFields();
+    const raw = localStorage.getItem(TRANSCRIBE_KEY);
+    if (raw) {
+      try {
+        setData(JSON.parse(raw));
+        say("已自动载入录文台棋盘。开局即可。");
+        return;
+      } catch (_) {}
+    }
+    try {
+      const res = await fetch("./zhiyin-cells.json");
+      if (res.ok) {
+        setData(await res.json());
+        say("已载入 zhiyin-cells.json。");
+        return;
+      }
+    } catch (_) {}
+    try {
+      const seed = await fetch("./zhiyin-seed.json");
+      if (seed.ok) {
+        setData(await seed.json());
+        say("已载入空白底图种子。请先在录文台加点连线，或导入 JSON。");
+        return;
+      }
+    } catch (_) {}
+    say("没有棋盘数据。请点「读录文台」，或导出 JSON 后导入。");
+  }
+
+  boot();
+  </script>
+</body>
+</html>

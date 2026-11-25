@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>升官图棋盘试用 — 故179983 — 中国传统图戏</title>
+  <meta name="description" content="故宫故179983本地多人棋盘试用。彩选德才功赃。格文除白丁外待核。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
+  <style>
+    :root { --wide: 72rem; --board-ink: #1c1b18; }
+    .setup, .hud, .board-wrap, .table-wrap { margin-top: 1.2rem; }
+    .setup {
+      padding: 1rem 0;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--line);
+      font-family: var(--sans);
+    }
+    .setup-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1rem;
+      align-items: center;
+      margin: 0.55rem 0;
+    }
+    .setup label { color: var(--muted); font-size: 0.88rem; }
+    .setup select, .setup input[type="text"] {
+      padding: 0.35rem 0.5rem;
+      border: 1px solid var(--line);
+      background: var(--sheet);
+      font: inherit;
+      max-width: 8rem;
+    }
+    .setup button, .hud button, .faces button {
+      padding: 0.4rem 0.75rem;
+      border: 1px solid var(--ink);
+      background: var(--sheet);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .setup button.primary, .hud button.primary {
+      background: var(--ink);
+      color: var(--sheet);
+    }
+    .hud {
+      display: none;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--line);
+      font-family: var(--sans);
+    }
+    .hud.is-on { display: block; }
+    .setup.is-hidden { display: none; }
+    .player-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin: 0.5rem 0;
+      padding: 0;
+      list-style: none;
+    }
+    .player-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.55rem;
+      border: 1px solid var(--line);
+      font-size: 0.88rem;
+    }
+    .player-list li.is-turn {
+      border-color: var(--ink);
+      background: var(--soft);
+    }
+    .token {
+      width: 0.85rem;
+      height: 0.85rem;
+      border-radius: 50%;
+      border: 1px solid var(--board-ink);
+      flex: 0 0 auto;
+    }
+    .faces { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .faces button[aria-pressed="true"] {
+      background: var(--ink);
+      color: var(--sheet);
+    }
+    .faces button:disabled { opacity: 0.4; cursor: not-allowed; }
+    #turn-msg { margin: 0.45rem 0 0; font-size: 0.95rem; }
+    .log {
+      margin: 0.6rem 0 0;
+      padding: 0;
+      list-style: none;
+      max-height: 8rem;
+      overflow: auto;
+      font-size: 0.86rem;
+    }
+    .log li {
+      margin: 0;
+      padding: 0.28rem 0;
+      border-top: 1px solid var(--line);
+    }
+    .board-wrap {
+      padding-top: 0.4rem;
+      border-top: 1px solid var(--ink);
+    }
+    .board {
+      display: grid;
+      gap: 0.55rem;
+      margin: 0.6rem 0 0;
+    }
+    .ring {
+      border: 1px solid var(--board-ink);
+      padding: 0.65rem 0.7rem 0.75rem;
+      background: #f3f1ea;
+    }
+    .ring h3 {
+      margin: 0 0 0.45rem;
+      font-size: 0.95rem;
+      font-family: var(--sans);
+      letter-spacing: 0.04em;
+    }
+    .zones {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+      gap: 0.45rem;
+    }
+    .zone {
+      border: 1px solid var(--line);
+      padding: 0.4rem 0.45rem 0.5rem;
+      background: var(--sheet);
+      min-height: 4.2rem;
+    }
+    .zone-name {
+      margin: 0 0 0.35rem;
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .cells {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .cell {
+      position: relative;
+      min-width: 3.4rem;
+      padding: 0.35rem 0.4rem 1.15rem;
+      border: 1px solid var(--board-ink);
+      background: #fffcf5;
+      font-size: 0.88rem;
+      line-height: 1.25;
+      text-align: center;
+    }
+    .cell.is-start { background: var(--soft); }
+    .cell.is-pending { border-style: dashed; color: var(--muted); }
+    .cell.is-focus {
+      outline: 2px solid var(--ink);
+      outline-offset: 1px;
+    }
+    .cell-tokens {
+      position: absolute;
+      left: 0.2rem;
+      right: 0.2rem;
+      bottom: 0.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.15rem;
+      justify-content: center;
+    }
+    .empty-zone {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .legend {
+      margin: 0.7rem 0 0;
+      font-family: var(--sans);
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+    @media (max-width: 40rem) {
+      .cell { min-width: 3rem; font-size: 0.82rem; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#content">跳到正文</a>
+  <div class="sheet">
+    <header class="site-header">
+      <p class="brand"><a href="../index.html">中国传统图戏</a></p>
+      <p class="site-note">研究与展览工作笔记 · Xingchen Zhang (Ian)</p>
+      <button type="button" class="nav-toggle" data-nav-toggle hidden>目录</button>
+      <nav id="site-nav" class="site-nav" aria-label="全站">
+        <ul>
+          <li><a href="../index.html">首页</a></li>
+          <li><a href="../lansheng/index.html">揽胜图</a></li>
+          <li><a href="../lansheng/play.html">玩法</a></li>
+          <li><a href="../lansheng/collections.html">对象与馆藏</a></li>
+          <li><a href="../lansheng/research.html">研究</a></li>
+          <li><a href="index.html">升官图</a></li>
+          <li><a href="play.html" aria-current="page">试用可玩</a></li>
+          <li><a href="../lansheng/zhiyin/play.html">掷饮试用</a></li>
+          <li><a href="../lansheng/zhiyin/transcribe.html">录文台</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="content">
+      <h1>棋盘试用</h1>
+      <p class="lede">本件故宫故 179983。本地多人热座：棋盘上放棋子，轮流转「德、才、功、赃」。目前只有白丁格可结算；其余格有位子、无细文，走到会卡住并标待核。</p>
+
+      <section class="setup" id="setup" aria-labelledby="setup-title">
+        <h2 id="setup-title">开局</h2>
+        <div class="setup-row">
+          <label for="player-count">人数</label>
+          <select id="player-count" aria-describedby="count-hint">
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+          <span id="count-hint" class="aside">同一屏幕轮流，不是联网。</span>
+        </div>
+        <div id="name-fields" class="setup-row"></div>
+        <div class="setup-row">
+          <button type="button" class="primary" id="start-btn">开始</button>
+        </div>
+      </section>
+
+      <section class="hud" id="hud" aria-labelledby="hud-title">
+        <h2 id="hud-title">这一局</h2>
+        <ul class="player-list" id="player-list"></ul>
+        <div class="setup-row">
+          <span>当前</span>
+          <strong id="current-player">—</strong>
+          <span>位置</span>
+          <strong id="current-pos">—</strong>
+        </div>
+        <div class="setup-row">
+          <span>转陀螺</span>
+          <div class="faces" role="group" aria-label="德才功赃">
+            <button type="button" data-face="德">德</button>
+            <button type="button" data-face="才">才</button>
+            <button type="button" data-face="功">功</button>
+            <button type="button" data-face="赃">赃</button>
+            <button type="button" class="primary" id="random-face">随机</button>
+          </div>
+          <button type="button" id="pass-btn" hidden>跳过（待核）</button>
+          <button type="button" id="restart-btn">重新开局</button>
+        </div>
+        <p id="turn-msg" aria-live="polite">—</p>
+        <ol class="log" id="log"></ol>
+      </section>
+
+      <section class="board-wrap" aria-labelledby="board-title">
+        <h2 id="board-title">棋盘</h2>
+        <p class="aside">分区按藏品页三圈总述排布，是示意图，不是原盘摹本。虚线格＝细文待核。</p>
+        <div class="board" id="board"></div>
+        <p class="legend">棋子颜色对应该玩家。格上可叠多人。盘图原件见 <a href="https://www.dpm.org.cn/collection/utensil/232141.html">故宫藏品页</a>。</p>
+      </section>
+
+      <h2>玩法</h2>
+      <p class="measure">彩选：转德／才／功／赃，按所在格文字对号入座。不是掷点数走路。白丁已核：「德监生，才案首，功童生，赃不动」。</p>
+
+      <h2>逐格表</h2>
+      <div class="table-wrap">
+        <table id="cell-table">
+          <caption>数据 <code>assets/gu179983-cells.json</code></caption>
+          <thead>
+            <tr>
+              <th scope="col">格</th>
+              <th scope="col">圈</th>
+              <th scope="col">德</th>
+              <th scope="col">才</th>
+              <th scope="col">功</th>
+              <th scope="col">赃</th>
+              <th scope="col">状态</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>工作笔记。不是已发表的论文。未核格不编造迁转。</p>
+      <p>最近更新：2026年11月。</p>
+    </footer>
+  </div>
+  <script>
+  (function () {
+    var COLORS = ["#b54a2a", "#1a4a40", "#2c4a7c", "#7a5b1e", "#5a3d6e", "#3d5c34"];
+    var data = null;
+    var cellsByName = {};
+    var players = [];
+    var turn = 0;
+    var started = false;
+
+    var setupEl = document.getElementById("setup");
+    var hudEl = document.getElementById("hud");
+    var nameFields = document.getElementById("name-fields");
+    var countSel = document.getElementById("player-count");
+    var boardEl = document.getElementById("board");
+    var listEl = document.getElementById("player-list");
+    var msgEl = document.getElementById("turn-msg");
+    var logEl = document.getElementById("log");
+    var passBtn = document.getElementById("pass-btn");
+
+    function buildNameFields() {
+      var n = Number(countSel.value);
+      nameFields.innerHTML = "";
+      for (var i = 0; i < n; i++) {
+        var lab = document.createElement("label");
+        lab.textContent = "玩家" + (i + 1);
+        lab.setAttribute("for", "pn-" + i);
+        var inp = document.createElement("input");
+        inp.type = "text";
+        inp.id = "pn-" + i;
+        inp.value = "玩家" + (i + 1);
+        inp.maxLength = 8;
+        nameFields.appendChild(lab);
+        nameFields.appendChild(inp);
+      }
+    }
+
+    function cellOf(name) { return cellsByName[name] || null; }
+
+    function currentPlayer() { return players[turn]; }
+
+    function renderTable() {
+      var tb = document.querySelector("#cell-table tbody");
+      tb.innerHTML = "";
+      (data.cells || []).forEach(function (c) {
+        var tr = document.createElement("tr");
+        function td(t, pending) {
+          var el = document.createElement("td");
+          if (pending) el.className = "pending";
+          el.textContent = t;
+          return el;
+        }
+        var th = document.createElement("th");
+        th.scope = "row";
+        th.textContent = c.name;
+        tr.appendChild(th);
+        tr.appendChild(td(c.ring === "outer" ? "外" : c.ring === "middle" ? "中" : "内", false));
+        ["德", "才", "功", "赃"].forEach(function (f) {
+          var v = c.moves && c.moves[f];
+          tr.appendChild(td(v || "待核", !v));
+        });
+        tr.appendChild(td(c.status === "verified" ? "已核" : "待核", c.status !== "verified"));
+        tb.appendChild(tr);
+      });
+    }
+
+    function occupants(cellName) {
+      return players.filter(function (p) { return p.pos === cellName; });
+    }
+
+    function renderBoard() {
+      var zones = data.series_zones || [];
+      var byRing = { outer: [], middle: [], inner: [] };
+      zones.forEach(function (z) {
+        if (byRing[z.ring]) byRing[z.ring].push(z);
+      });
+      var cells = data.cells || [];
+      function cellsInZone(zoneId) {
+        return cells.filter(function (c) {
+          return c.board && c.board.lane === zoneId;
+        }).sort(function (a, b) {
+          return (a.board.order || 0) - (b.board.order || 0);
+        });
+      }
+      var html = "";
+      [
+        { key: "inner", title: "内圈" },
+        { key: "middle", title: "中圈" },
+        { key: "outer", title: "外圈" }
+      ].forEach(function (ring) {
+        html += '<div class="ring" data-ring="' + ring.key + '"><h3>' + ring.title + "</h3><div class=\"zones\">";
+        byRing[ring.key].forEach(function (z) {
+          var zs = cellsInZone(z.id);
+          html += '<div class="zone" data-zone="' + z.id + '">';
+          html += '<p class="zone-name">' + z.name + "</p><div class=\"cells\">";
+          if (!zs.length) {
+            html += '<span class="empty-zone">格文待核</span>';
+          } else {
+            zs.forEach(function (c) {
+              var cls = "cell";
+              if (c.start) cls += " is-start";
+              if (c.status !== "verified") cls += " is-pending";
+              if (started && currentPlayer() && currentPlayer().pos === c.name) cls += " is-focus";
+              html += '<div class="' + cls + '" data-cell="' + c.name + '" title="' +
+                (c.status === "verified" ? "已核" : "细文待核") + '">';
+              html += c.name;
+              html += '<div class="cell-tokens">';
+              occupants(c.name).forEach(function (p) {
+                html += '<span class="token" style="background:' + p.color + '" title="' + p.name + '"></span>';
+              });
+              html += "</div></div>";
+            });
+          }
+          html += "</div></div>";
+        });
+        html += "</div></div>";
+      });
+      boardEl.innerHTML = html;
+    }
+
+    function renderHud() {
+      listEl.innerHTML = "";
+      players.forEach(function (p, i) {
+        var li = document.createElement("li");
+        if (i === turn) li.className = "is-turn";
+        li.innerHTML = '<span class="token" style="background:' + p.color + '"></span>' +
+          p.name + " · " + p.pos +
+          (p.blocked ? " · 待核卡住" : "");
+        listEl.appendChild(li);
+      });
+      var p = currentPlayer();
+      document.getElementById("current-player").textContent = p ? p.name : "—";
+      document.getElementById("current-pos").textContent = p ? p.pos : "—";
+      var cell = p ? cellOf(p.pos) : null;
+      var blocked = !!(cell && cell.status !== "verified");
+      passBtn.hidden = !blocked;
+      document.querySelectorAll(".faces button").forEach(function (b) {
+        if (b.id === "random-face") return;
+        b.disabled = blocked;
+      });
+      document.getElementById("random-face").disabled = blocked;
+      if (blocked) {
+        msgEl.textContent = p.name + " 在「" + p.pos + "」，格文待核，本格无法结算。可跳过或等续录。";
+      } else {
+        msgEl.textContent = "轮到 " + p.name + "：选德／才／功／赃，或随机。";
+      }
+      renderBoard();
+    }
+
+    function log(text) {
+      var li = document.createElement("li");
+      li.textContent = text;
+      logEl.insertBefore(li, logEl.firstChild);
+    }
+
+    function nextTurn() {
+      turn = (turn + 1) % players.length;
+      renderHud();
+    }
+
+    function applyFace(face) {
+      if (!started) return;
+      var p = currentPlayer();
+      var cell = cellOf(p.pos);
+      if (!cell || cell.status !== "verified") {
+        msgEl.textContent = "「" + p.pos + "」待核，不能转。";
+        return;
+      }
+      var dest = cell.moves[face];
+      if (!dest) {
+        msgEl.textContent = "「" + p.pos + "」的「" + face + "」待核。";
+        return;
+      }
+      document.querySelectorAll(".faces [data-face]").forEach(function (b) {
+        b.setAttribute("aria-pressed", b.getAttribute("data-face") === face ? "true" : "false");
+      });
+      if (dest === "不动") {
+        log(p.name + " 在白丁转「" + face + "」→ 不动");
+        msgEl.textContent = p.name + " 赃／结果：不动。";
+        nextTurn();
+        return;
+      }
+      var from = p.pos;
+      p.pos = dest;
+      var next = cellOf(dest);
+      p.blocked = !(next && next.status === "verified");
+      log(p.name + "：" + from + " · " + face + " → " + dest +
+        (p.blocked ? "（待核）" : ""));
+      msgEl.textContent = p.name + " 至「" + dest + "」" +
+        (p.blocked ? "。该格细文待核。" : "。");
+      nextTurn();
+    }
+
+    function startGame() {
+      var n = Number(countSel.value);
+      players = [];
+      for (var i = 0; i < n; i++) {
+        var inp = document.getElementById("pn-" + i);
+        players.push({
+          name: (inp && inp.value.trim()) || ("玩家" + (i + 1)),
+          color: COLORS[i % COLORS.length],
+          pos: "白丁",
+          blocked: false
+        });
+      }
+      turn = 0;
+      started = true;
+      logEl.innerHTML = "";
+      setupEl.classList.add("is-hidden");
+      hudEl.classList.add("is-on");
+      log("开局：" + players.map(function (p) { return p.name; }).join("、") + "，皆从白丁起。");
+      renderHud();
+    }
+
+    function restart() {
+      started = false;
+      players = [];
+      turn = 0;
+      hudEl.classList.remove("is-on");
+      setupEl.classList.remove("is-hidden");
+      passBtn.hidden = true;
+      logEl.innerHTML = "";
+      msgEl.textContent = "—";
+      document.querySelectorAll(".faces [data-face]").forEach(function (b) {
+        b.setAttribute("aria-pressed", "false");
+        b.disabled = false;
+      });
+      document.getElementById("random-face").disabled = false;
+      renderBoard();
+    }
+
+    fetch("assets/gu179983-cells.json").then(function (r) { return r.json(); }).then(function (json) {
+      data = json;
+      (data.cells || []).forEach(function (c) { cellsByName[c.name] = c; });
+      renderTable();
+      renderBoard();
+      buildNameFields();
+      countSel.addEventListener("change", buildNameFields);
+      document.getElementById("start-btn").addEventListener("click", startGame);
+      document.getElementById("restart-btn").addEventListener("click", restart);
+      passBtn.addEventListener("click", function () {
+        if (!started) return;
+        var p = currentPlayer();
+        log(p.name + " 跳过（「" + p.pos + "」待核）");
+        nextTurn();
+      });
+      document.querySelectorAll(".faces [data-face]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          applyFace(btn.getAttribute("data-face"));
+        });
+      });
+      document.getElementById("random-face").addEventListener("click", function () {
+        var faces = data.spinner || ["德", "才", "功", "赃"];
+        applyFace(faces[Math.floor(Math.random() * faces.length)]);
+      });
+    }).catch(function () {
+      msgEl.textContent = "读不到 gu179983-cells.json。";
+    });
+  })();
+  </script>
+</body>
+</html>

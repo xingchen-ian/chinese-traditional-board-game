@@ -1,0 +1,23 @@
+{
+  "source": "user-photo-2026-11-22",
+  "title": "掷饮图（印本待核）",
+  "note": "两叶照片上的圆格路径图。格名与旁注由人工填写；印本系属未核，勿与吴陈琰本或高兆本混称。",
+  "panels": {
+    "a": {
+      "width": 652,
+      "height": 896,
+      "image": "./assets/zhiyin-panel-a.jpg",
+      "caption": "左叶（有「擲飲」大字）",
+      "nodes": [],
+      "edges": []
+    },
+    "b": {
+      "width": 648,
+      "height": 910,
+      "image": "./assets/zhiyin-panel-b.jpg",
+      "caption": "右叶（有「凡例」框）",
+      "nodes": [],
+      "edges": []
+    }
+  }
+}

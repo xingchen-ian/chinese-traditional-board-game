@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>掷饮图录文台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #e6e4de;
+      --sheet: #f7f6f2;
+      --ink: #1c1b18;
+      --muted: #5c584f;
+      --line: #d3cfc6;
+      --accent: #1a4a40;
+      --warn: #8a3b12;
+      --serif: "Noto Serif SC", "Songti SC", "STSong", serif;
+      --sans: "Noto Sans SC", "PingFang SC", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: var(--sans);
+      line-height: 1.5;
+    }
+    header {
+      padding: 0.9rem 1.1rem 0.7rem;
+      background: var(--sheet);
+      border-bottom: 1px solid var(--line);
+    }
+    header h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    header p {
+      margin: 0.35rem 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      align-items: center;
+      padding: 0.65rem 1.1rem;
+      background: #f0eee8;
+      border-bottom: 1px solid var(--line);
+    }
+    .toolbar button, .toolbar label.file {
+      appearance: none;
+      border: 1px solid #b8b3a6;
+      background: #fff;
+      color: var(--ink);
+      border-radius: 4px;
+      padding: 0.35rem 0.7rem;
+      font: inherit;
+      font-size: 0.86rem;
+      cursor: pointer;
+    }
+    .toolbar button[aria-pressed="true"] {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .toolbar button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .toolbar .sep {
+      width: 1px;
+      height: 1.4rem;
+      background: var(--line);
+      margin: 0 0.2rem;
+    }
+    .toolbar label.range {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .toolbar input[type="file"] { display: none; }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      min-height: calc(100vh - 8rem);
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+    .stage-wrap {
+      overflow: auto;
+      padding: 1rem;
+      background: #cfc9bb;
+    }
+    .stage {
+      position: relative;
+      margin: 0 auto;
+      box-shadow: 0 8px 28px rgba(40, 30, 10, 0.22);
+      background: #e8d9b8;
+      user-select: none;
+      touch-action: none;
+    }
+    .stage .underlay-row {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      width: 100%;
+      pointer-events: none;
+    }
+    .stage .underlay-row img {
+      display: block;
+      flex: 0 0 auto;
+      height: auto;
+      max-width: none;
+    }
+    .stage svg.overlay {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .stage.svg-only .underlay-row img { opacity: 0 !important; }
+    .stage svg .edge {
+      stroke: #1a4a40;
+      stroke-width: 1.5;
+      fill: none;
+      opacity: 0.75;
+    }
+    .stage svg .node circle,
+    .stage svg .node rect {
+      fill: rgba(255, 252, 245, 0.55);
+      stroke: #8a1f12;
+      stroke-width: 1.6;
+      cursor: grab;
+    }
+    .stage svg .node.filled circle,
+    .stage svg .node.filled rect {
+      fill: rgba(232, 245, 236, 0.82);
+      stroke: var(--accent);
+    }
+    .stage svg .node.selected circle,
+    .stage svg .node.selected rect {
+      stroke: #0b5fff;
+      stroke-width: 2.4;
+      fill: rgba(200, 220, 255, 0.75);
+    }
+    .stage svg .node text {
+      fill: #1c1b18;
+      font-family: var(--serif);
+      font-size: 11px;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      pointer-events: none;
+    }
+    .side {
+      border-left: 1px solid var(--line);
+      background: var(--sheet);
+      padding: 0.9rem 1rem 1.4rem;
+      overflow: auto;
+    }
+    .side h2 {
+      margin: 0 0 0.5rem;
+      font-family: var(--serif);
+      font-size: 1rem;
+    }
+    .side label {
+      display: block;
+      margin: 0.55rem 0 0.2rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .side input[type="text"],
+    .side textarea,
+    .side select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 0.4rem 0.5rem;
+      font: inherit;
+      background: #fff;
+    }
+    .side textarea { min-height: 5.5rem; resize: vertical; }
+    .side .hint {
+      margin: 0.7rem 0 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .side .stats {
+      margin-top: 1rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--line);
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .side .danger { color: var(--warn); }
+    .empty {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-top: 0.4rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>掷饮图录文台</h1>
+    <p>默认合页并排；也可单叶编辑。已填内容存在本机浏览器，刷新不会清空。印本系属<strong>待核</strong>，勿与吴陈琰本或高兆本混称。填完可开 <a href="play.html">试用</a>。返回 <a href="../play.html">玩法</a>／<a href="../index.html">揽胜图</a>。</p>
+  </header>
+
+  <div class="toolbar" role="toolbar" aria-label="录文工具">
+    <button type="button" data-panel="ab" aria-pressed="true">合页</button>
+    <button type="button" data-panel="a" aria-pressed="false">左叶</button>
+    <button type="button" data-panel="b" aria-pressed="false">右叶</button>
+    <button type="button" id="btn-swap" title="只对调合页左右，不改格数据">对调左右</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button type="button" data-mode="add" aria-pressed="true">加点</button>
+    <button type="button" data-mode="link" aria-pressed="false">连线</button>
+    <button type="button" data-mode="move" aria-pressed="false">拖移</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button type="button" id="btn-rect">改方框</button>
+    <button type="button" id="btn-del">删除选中</button>
+    <button type="button" id="btn-clear">清空本叶</button>
+    <span class="sep" aria-hidden="true"></span>
+    <label class="range">底图
+      <input type="range" id="opacity" min="0" max="100" value="88">
+    </label>
+    <button type="button" id="btn-toggle-img" aria-pressed="true">显底图</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button type="button" id="btn-allusion">自动补典故</button>
+    <button type="button" id="btn-export">导出 JSON</button>
+    <label class="file">导入 JSON<input type="file" id="import" accept="application/json,.json"></label>
+    <button type="button" id="btn-save">存本地</button>
+  </div>
+
+  <div class="layout">
+    <div class="stage-wrap">
+      <div class="stage" id="stage" aria-label="棋盘录文区">
+        <div class="underlay-row" id="underlay-row">
+          <img id="underlay-left" alt="合页左">
+          <img id="underlay-right" alt="合页右">
+        </div>
+        <svg class="overlay" id="svg" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+    </div>
+    <aside class="side">
+      <h2>当前格</h2>
+      <div id="editor-empty" class="empty">点底图空白处加点，或点已有圆格编辑。</div>
+      <form id="editor" hidden>
+        <label for="f-label">格名</label>
+        <input id="f-label" type="text" autocomplete="off" placeholder="如：藍關">
+        <label for="f-note">旁注／赏罚</label>
+        <textarea id="f-note" placeholder="如：至此一杯"></textarea>
+        <label for="f-allusion">典故</label>
+        <textarea id="f-allusion" placeholder="地名典故、出处（可空）"></textarea>
+        <label for="f-shape">外形</label>
+        <select id="f-shape">
+          <option value="circle">圆</option>
+          <option value="rect">方框</option>
+        </select>
+        <label for="f-status">核验</label>
+        <select id="f-status">
+          <option value="pending">待核</option>
+          <option value="checked">已核</option>
+        </select>
+        <p class="hint">改完自动写入。连线：先点起点再点终点。</p>
+      </form>
+      <div class="stats" id="stats"></div>
+    </aside>
+  </div>
+
+  <script>
+  const STORAGE_KEY = "zhiyin-transcribe-v1";
+  // 只收常见、把握较大的地名典故；数字格／不确定格名不写。
+  // 简繁异体靠 normalizeLabel 对齐。不是印本旁注，也不是已核文献结论。
+  const ALLUSION_MAP = {
+    "蓝关": "韩愈贬潮州途经蓝关；诗有「雪拥蓝关马不前」。",
+    "臨關": "常见作蓝关；韩愈「雪拥蓝关马不前」。格名用字待核。",
+    "临关": "常见作蓝关；韩愈「雪拥蓝关马不前」。格名用字待核。",
+    "鸿门": "秦末项羽宴刘邦于鸿门（鸿门宴）。",
+    "鴻門": "秦末项羽宴刘邦于鸿门（鸿门宴）。",
+    "雁门": "边塞关隘；古诗多写雁门。与「鸿门」是否同格待核，未并写。",
+    "醉翁": "欧阳修滁州《醉翁亭记》；「醉翁之意不在酒」。",
+    "醉翁亭": "欧阳修滁州《醉翁亭记》。",
+    "虎丘": "苏州虎丘；传吴王阖闾葬处，有剑池、千人石等名胜。",
+    "虎邱": "苏州虎丘（旧亦作虎邱）。",
+    "易水": "荆轲入秦前，燕太子丹饯于易水；「风萧萧兮易水寒」。",
+    "庐山": "江西庐山；陶渊明、李白等屡入诗文。",
+    "廬山": "江西庐山；陶渊明、李白等屡入诗文。",
+    "滕王阁": "南昌滕王阁；王勃《滕王阁序》。",
+    "滕阁": "多指南昌滕王阁；王勃《滕王阁序》。格名是否省称待核。",
+    "騰閣": "多指南昌滕王阁；王勃《滕王阁序》。格名用字待核。",
+    "赤壁": "常见两系：三国周瑜破曹；苏轼黄州前后《赤壁赋》。图上取哪一系待核。",
+    "钓台": "常见指严子陵钓台（富春江）。是否即本图此格待核。",
+    "釣臺": "常见指严子陵钓台（富春江）。是否即本图此格待核。",
+    "天竺": "杭州上天竺／下天竺一带佛寺名胜。",
+    "剑阁": "蜀道剑阁；李白《蜀道难》写剑阁险。",
+    "劍閣": "蜀道剑阁；李白《蜀道难》写剑阁险。",
+    "回马岭": "泰山等地有回马岭地名；图中作「掷回马逆行」机关，典故从略。",
+    "回馬嶺": "泰山等地有回马岭地名；图中作「掷回马逆行」机关，典故从略。",
+    "磻溪": "传姜太公钓鱼处（陕西宝鸡一带磻溪）。",
+    "雁宕": "雁荡山（旧亦作雁宕）；浙东名胜。",
+    "雁蕩": "雁荡山；浙东名胜。",
+    "雁荡": "雁荡山；浙东名胜。",
+    "雁塔": "西安大雁塔；唐进士有雁塔题名之习。",
+    "三笑堂": "虎溪三笑：慧远、陶渊明、陆修静相送过溪而笑（故事流传，史实有争议）。",
+    "题桥": "司马相如过成都升仙桥，题柱言志（题桥）。",
+    "題橋": "司马相如过成都升仙桥，题柱言志（题桥）。",
+    "蓬莱": "海上三神山之一；秦汉求仙传说。",
+    "蓬萊": "海上三神山之一；秦汉求仙传说。",
+    "太湖": "江南太湖；范蠡、唐人诗咏等多涉。",
+    "天台": "天台山；刘晨、阮肇入天台遇仙传说。",
+    "吳山": "杭州吴山。",
+    "吴山": "杭州吴山。",
+    "黄粱": "沈既济《枕中记》邯郸黄粱梦。",
+    "黄粱梦": "沈既济《枕中记》邯郸黄粱梦。",
+    "黃粱": "沈既济《枕中记》邯郸黄粱梦。",
+    "铜雀台": "曹操建铜雀台于邺；唐人诗咏铜雀妓。",
+    "銅雀臺": "曹操建铜雀台于邺；唐人诗咏铜雀妓。",
+    "峨眉山": "四川峨眉山；佛教名山。",
+    "峨眉": "四川峨眉山；佛教名山。",
+    "桃叶渡": "南京秦淮河桃叶渡；传王献之歌《桃叶歌》处。",
+    "桃葉渡": "南京秦淮河桃叶渡；传王献之歌《桃叶歌》处。",
+    "巫山": "巫山云雨；宋玉《高唐》《神女》赋所写传说。",
+    "洞庭": "洞庭湖；常与岳阳楼、君山并提。",
+    "鹦鹉洲": "武汉长江鹦鹉洲；崔颢《黄鹤楼》「芳草萋萋鹦鹉洲」。",
+    "鸚鵡洲": "武汉长江鹦鹉洲；崔颢《黄鹤楼》「芳草萋萋鹦鹉洲」。",
+    "雨花台": "南京雨花台。",
+    "惶恐滩": "赣江十八滩之一；文天祥《过零丁洋》「惶恐滩头说惶恐」。",
+    "灞桥": "长安灞桥；唐人送客折柳处分手处。",
+    "灞橋": "长安灞桥；唐人送客折柳处分手处。",
+    "龙门": "常见两系：禹凿龙门；或科举「鱼跃龙门」。图上取哪一系待核。",
+    "龍門": "常见两系：禹凿龙门；或科举「鱼跃龙门」。图上取哪一系待核。",
+    "曲江": "唐长安曲江；进士宴游之地。",
+    "武夷": "福建武夷山。",
+    "桃源": "陶渊明《桃花源记》。",
+    "黄鹤楼": "武昌黄鹤楼；崔颢《黄鹤楼》、李白相关诗。",
+    "黃鶴樓": "武昌黄鹤楼；崔颢《黄鹤楼》、李白相关诗。",
+    "卧龙岗": "南阳卧龙岗；传诸葛亮隐居处。",
+    "臥龍崗": "南阳卧龙岗；传诸葛亮隐居处。",
+    "龙虎山": "江西龙虎山；道教名山，正一派祖庭。",
+    "龍虎山": "江西龙虎山；道教名山，正一派祖庭。",
+    "金山": "镇江金山；白蛇传水漫金山等故事所附。",
+    "兰亭": "会稽山阴兰亭；王羲之《兰亭集序》雅集处。",
+    "蘭亭": "会稽山阴兰亭；王羲之《兰亭集序》雅集处。",
+    "长安市": "长安市井；李白「长安市上酒家眠」一类书写所依。",
+    "長安市": "长安市井；李白「长安市上酒家眠」一类书写所依。",
+    "太华": "西岳华山（太华）。",
+    "太華": "西岳华山（太华）。",
+    "岳阳楼": "洞庭湖畔岳阳楼；范仲淹《岳阳楼记》。",
+    "岳陽樓": "洞庭湖畔岳阳楼；范仲淹《岳阳楼记》。",
+    "燕子矶": "南京长江边燕子矶；矶石形如展翅燕子。",
+    "燕子磯": "南京长江边燕子矶；矶石形如展翅燕子。",
+    "烟雨楼": "嘉兴南湖烟雨楼较著名；他处亦有同名楼，是否即此待核。",
+    "煙雨樓": "嘉兴南湖烟雨楼较著名；他处亦有同名楼，是否即此待核。",
+    "琵琶亭": "九江琵琶亭；白居易《琵琶行》「江州司马」故事所系。",
+    "潯陽": "浔阳即今九江一带；白居易《琵琶行》写浔阳江头。",
+    "浔阳": "浔阳即今九江一带；白居易《琵琶行》写浔阳江头。",
+    "凤凰台": "南京凤凰台；李白《登金陵凤凰台》。",
+    "鳳凰臺": "南京凤凰台；李白《登金陵凤凰台》。",
+    "陈仓": "暗度陈仓；韩信出汉中故事。",
+    "陳倉": "暗度陈仓；韩信出汉中故事。",
+    "劳劳亭": "金陵劳劳亭；古送别之地。李白有《劳劳亭》。",
+    "勞勞亭": "金陵劳劳亭；古送别之地。李白有《劳劳亭》。",
+    "观止": "终局格名；语出「叹为观止」一类用法，具体是否即本图终点待核。",
+    "觀止": "终局格名；语出「叹为观止」一类用法，具体是否即本图终点待核。",
+    "九畹": "屈原《离骚》「余既滋兰之九畹」；兰圃意象。",
+    "醴泉": "甘泉；《礼记》等有「天降甘露，地出醴泉」一类说法。",
+    "井陘": "井陉；韩信背水一战处。",
+    "井陉": "井陉；韩信背水一战处。",
+  };
+
+  function normalizeLabel(s) {
+    return String(s || "")
+      .trim()
+      .replace(/\s+/g, "")
+      .replace(/[　]/g, "");
+  }
+
+  function lookupAllusion(label) {
+    const raw = normalizeLabel(label);
+    if (!raw) return "";
+    if (ALLUSION_MAP[raw]) return ALLUSION_MAP[raw];
+    // 简繁粗映射几组常见异体后再查
+    const simp = raw
+      .replace(/藍/g, "蓝")
+      .replace(/關/g, "关")
+      .replace(/門/g, "门")
+      .replace(/廬/g, "庐")
+      .replace(/劍/g, "剑")
+      .replace(/閣/g, "阁")
+      .replace(/臺/g, "台")
+      .replace(/釣/g, "钓")
+      .replace(/馬/g, "马")
+      .replace(/嶺/g, "岭")
+      .replace(/蕩/g, "荡")
+      .replace(/題/g, "题")
+      .replace(/橋/g, "桥")
+      .replace(/萊/g, "莱")
+      .replace(/吳/g, "吴")
+      .replace(/黃/g, "黄")
+      .replace(/銅/g, "铜")
+      .replace(/雀/g, "雀")
+      .replace(/葉/g, "叶")
+      .replace(/鸚/g, "鹦")
+      .replace(/鵡/g, "鹉")
+      .replace(/洲/g, "洲")
+      .replace(/龍/g, "龙")
+      .replace(/崗/g, "岗")
+      .replace(/蘭/g, "兰")
+      .replace(/長/g, "长")
+      .replace(/華/g, "华")
+      .replace(/陽/g, "阳")
+      .replace(/樓/g, "楼")
+      .replace(/磯/g, "矶")
+      .replace(/煙/g, "烟")
+      .replace(/鳳/g, "凤")
+      .replace(/陳/g, "陈")
+      .replace(/倉/g, "仓")
+      .replace(/勞/g, "劳")
+      .replace(/觀/g, "观")
+      .replace(/潯/g, "浔");
+    if (ALLUSION_MAP[simp]) return ALLUSION_MAP[simp];
+    return "";
+  }
+
+  const state = {
+    data: null,
+    panel: "ab",
+    mode: "add",
+    selectedId: null,
+    linkFrom: null,
+    drag: null,
+    showImg: true,
+  };
+
+  const stage = document.getElementById("stage");
+  const underlayRow = document.getElementById("underlay-row");
+  const underlayLeft = document.getElementById("underlay-left");
+  const underlayRight = document.getElementById("underlay-right");
+  const svg = document.getElementById("svg");
+  const editor = document.getElementById("editor");
+  const editorEmpty = document.getElementById("editor-empty");
+  const fLabel = document.getElementById("f-label");
+  const fNote = document.getElementById("f-note");
+  const fAllusion = document.getElementById("f-allusion");
+  const fShape = document.getElementById("f-shape");
+  const fStatus = document.getElementById("f-status");
+  const stats = document.getElementById("stats");
+  const opacity = document.getElementById("opacity");
+
+  function isCombined() {
+    return state.panel === "ab";
+  }
+
+  function spreadOrder() {
+    // 默认 ba：右叶(b)在左、左叶(a)在右；仅显式 ab 时反过来
+    return state.data.spreadOrder === "ab" ? "ab" : "ba";
+  }
+
+  function orderedPanelIds() {
+    return spreadOrder() === "ba" ? ["b", "a"] : ["a", "b"];
+  }
+
+  function visiblePanelIds() {
+    return isCombined() ? orderedPanelIds() : [state.panel];
+  }
+
+  function panelOf(pid) {
+    return state.data.panels[pid];
+  }
+
+  function panelOffsetX(pid) {
+    if (!isCombined()) return 0;
+    const ids = orderedPanelIds();
+    if (pid === ids[0]) return 0;
+    return panelOf(ids[0]).width;
+  }
+
+  function viewSize() {
+    const ids = visiblePanelIds();
+    let w = 0;
+    let h = 0;
+    for (const pid of ids) {
+      const p = panelOf(pid);
+      w += p.width;
+      h = Math.max(h, p.height);
+    }
+    return { width: w, height: h };
+  }
+
+  function findNode(id) {
+    if (!id || !state.data) return null;
+    for (const pid of ["a", "b"]) {
+      const n = panelOf(pid).nodes.find((x) => x.id === id);
+      if (n) return n;
+    }
+    return null;
+  }
+
+  function nodePanelId(node) {
+    if (!node) return null;
+    if (node.panel === "a" || node.panel === "b") return node.panel;
+    if (String(node.id).startsWith("b-")) return "b";
+    return "a";
+  }
+
+  function viewXY(node) {
+    const pid = nodePanelId(node);
+    return {
+      x: node.x + panelOffsetX(pid),
+      y: node.y,
+    };
+  }
+
+  function ensureCrossEdges() {
+    if (!Array.isArray(state.data.crossEdges)) state.data.crossEdges = [];
+  }
+
+  function allEdges() {
+    ensureCrossEdges();
+    const list = [];
+    for (const pid of visiblePanelIds()) {
+      for (const e of panelOf(pid).edges || []) list.push(e);
+    }
+    if (isCombined()) {
+      for (const e of state.data.crossEdges) list.push(e);
+    }
+    return list;
+  }
+
+  function nextId(pid) {
+    let i = panelOf(pid).nodes.length + 1;
+    let id;
+    do {
+      id = `${pid}-${String(i).padStart(3, "0")}`;
+      i += 1;
+    } while (findNode(id));
+    return id;
+  }
+
+  function persist() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
+    updateStats();
+  }
+
+  function updateStats() {
+    const ids = visiblePanelIds();
+    let nodes = 0;
+    let filled = 0;
+    let checked = 0;
+    let edges = 0;
+    for (const pid of ids) {
+      const p = panelOf(pid);
+      nodes += p.nodes.length;
+      filled += p.nodes.filter((n) => n.label && n.label.trim()).length;
+      checked += p.nodes.filter((n) => n.status === "checked").length;
+      edges += (p.edges || []).length;
+    }
+    if (isCombined()) {
+      ensureCrossEdges();
+      edges += state.data.crossEdges.length;
+    }
+    const scope = isCombined() ? "合页" : "本叶";
+    stats.innerHTML =
+      `${scope}：${nodes} 格 · 已填 ${filled} · 已核 ${checked}<br>` +
+      `连线：${edges}` +
+      (isCombined() ? ` · 左右序 ${spreadOrder() === "ab" ? "左叶|右叶" : "右叶|左叶"}` : "") +
+      `<br><span class="danger">${state.data.note || ""}</span>`;
+  }
+
+  function setMode(mode) {
+    state.mode = mode;
+    state.linkFrom = null;
+    document.querySelectorAll("[data-mode]").forEach((btn) => {
+      btn.setAttribute("aria-pressed", String(btn.dataset.mode === mode));
+    });
+  }
+
+  function setPanel(pid) {
+    state.panel = pid;
+    state.selectedId = null;
+    state.linkFrom = null;
+    document.querySelectorAll("[data-panel]").forEach((btn) => {
+      btn.setAttribute("aria-pressed", String(btn.dataset.panel === pid));
+    });
+    loadPanelView();
+    render();
+    syncEditor();
+  }
+
+  function loadPanelView() {
+    const op = String(Number(opacity.value) / 100);
+    const ids = visiblePanelIds();
+    const size = viewSize();
+    stage.classList.toggle("svg-only", !state.showImg);
+    stage.style.width = size.width + "px";
+    svg.setAttribute("viewBox", `0 0 ${size.width} ${size.height}`);
+
+    underlayLeft.hidden = false;
+    underlayRight.hidden = ids.length < 2;
+    underlayLeft.src = panelOf(ids[0]).image;
+    underlayLeft.style.width = panelOf(ids[0]).width + "px";
+    underlayLeft.style.opacity = op;
+    if (ids.length > 1) {
+      underlayRight.src = panelOf(ids[1]).image;
+      underlayRight.style.width = panelOf(ids[1]).width + "px";
+      underlayRight.style.opacity = op;
+    } else {
+      underlayRight.removeAttribute("src");
+      underlayRight.style.width = "0";
+    }
+  }
+
+  function syncEditor() {
+    const n = state.selectedId ? findNode(state.selectedId) : null;
+    if (!n) {
+      editor.hidden = true;
+      editorEmpty.hidden = false;
+      return;
+    }
+    editor.hidden = false;
+    editorEmpty.hidden = true;
+    fLabel.value = n.label || "";
+    fNote.value = n.note || "";
+    fAllusion.value = n.allusion || "";
+    fShape.value = n.shape || "circle";
+    fStatus.value = n.status || "pending";
+  }
+
+  function verticalLabel(text) {
+    const t = (text || "").trim();
+    if (!t) return "·";
+    if (t.length <= 4) return t.split("").join("\n");
+    return t.slice(0, 4).split("").join("\n");
+  }
+
+  function render() {
+    const edgeLayer = [];
+    const nodeLayer = [];
+
+    for (const e of allEdges()) {
+      const a = findNode(e.from);
+      const b = findNode(e.to);
+      if (!a || !b) continue;
+      if (!isCombined()) {
+        const pid = state.panel;
+        if (nodePanelId(a) !== pid || nodePanelId(b) !== pid) continue;
+      }
+      const av = viewXY(a);
+      const bv = viewXY(b);
+      edgeLayer.push(
+        `<line class="edge" x1="${av.x}" y1="${av.y}" x2="${bv.x}" y2="${bv.y}" data-from="${e.from}" data-to="${e.to}" />`
+      );
+    }
+
+    for (const pid of visiblePanelIds()) {
+      for (const n of panelOf(pid).nodes) {
+        const v = viewXY(n);
+        const selected = n.id === state.selectedId ? " selected" : "";
+        const filled = n.label && n.label.trim() ? " filled" : "";
+        const r = n.r || 14;
+        let shape;
+        if (n.shape === "rect") {
+          const s = r * 1.7;
+          shape = `<rect x="${v.x - s / 2}" y="${v.y - s / 2}" width="${s}" height="${s}" rx="2" />`;
+        } else {
+          shape = `<circle cx="${v.x}" cy="${v.y}" r="${r}" />`;
+        }
+        const lines = verticalLabel(n.label).split("\n");
+        const text = lines
+          .map((line, i) => {
+            const dy = (i - (lines.length - 1) / 2) * 11;
+            return `<text x="${v.x}" y="${v.y + dy}">${escapeXml(line)}</text>`;
+          })
+          .join("");
+        nodeLayer.push(
+          `<g class="node${selected}${filled}" data-id="${n.id}">${shape}${text}</g>`
+        );
+      }
+    }
+
+    svg.innerHTML = edgeLayer.join("") + nodeLayer.join("");
+    updateStats();
+  }
+
+  function escapeXml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function svgPoint(evt) {
+    const rect = svg.getBoundingClientRect();
+    const size = viewSize();
+    const x = ((evt.clientX - rect.left) / rect.width) * size.width;
+    const y = ((evt.clientY - rect.top) / rect.height) * size.height;
+    return { x: Math.round(x), y: Math.round(y) };
+  }
+
+  function hitToLocal(pt) {
+    if (!isCombined()) {
+      return { panelId: state.panel, x: pt.x, y: pt.y };
+    }
+    const ids = orderedPanelIds();
+    const leftW = panelOf(ids[0]).width;
+    if (pt.x < leftW) {
+      return { panelId: ids[0], x: pt.x, y: pt.y };
+    }
+    return { panelId: ids[1], x: pt.x - leftW, y: pt.y };
+  }
+
+  function hitNode(evt) {
+    const g = evt.target.closest("g.node");
+    return g ? g.dataset.id : null;
+  }
+
+  function edgeExists(from, to) {
+    ensureCrossEdges();
+    const packs = [
+      ...(panelOf("a").edges || []),
+      ...(panelOf("b").edges || []),
+      ...state.data.crossEdges,
+    ];
+    return packs.some(
+      (e) =>
+        (e.from === from && e.to === to) || (e.from === to && e.to === from)
+    );
+  }
+
+  function addEdge(from, to) {
+    ensureCrossEdges();
+    if (edgeExists(from, to)) return;
+    const pa = nodePanelId(findNode(from));
+    const pb = nodePanelId(findNode(to));
+    if (pa && pb && pa === pb) {
+      panelOf(pa).edges.push({ from, to });
+    } else {
+      state.data.crossEdges.push({ from, to });
+    }
+  }
+
+  function removeNode(id) {
+    ensureCrossEdges();
+    for (const pid of ["a", "b"]) {
+      const p = panelOf(pid);
+      p.nodes = p.nodes.filter((n) => n.id !== id);
+      p.edges = (p.edges || []).filter((e) => e.from !== id && e.to !== id);
+    }
+    state.data.crossEdges = state.data.crossEdges.filter(
+      (e) => e.from !== id && e.to !== id
+    );
+  }
+
+  svg.addEventListener("pointerdown", (evt) => {
+    const id = hitNode(evt);
+    const pt = svgPoint(evt);
+
+    if (state.mode === "add" && !id) {
+      const local = hitToLocal(pt);
+      const n = {
+        id: nextId(local.panelId),
+        panel: local.panelId,
+        x: local.x,
+        y: local.y,
+        r: 14,
+        shape: "circle",
+        label: "",
+        note: "",
+        allusion: "",
+        status: "pending",
+      };
+      panelOf(local.panelId).nodes.push(n);
+      state.selectedId = n.id;
+      persist();
+      render();
+      syncEditor();
+      fLabel.focus();
+      return;
+    }
+
+    if (!id) {
+      state.selectedId = null;
+      state.linkFrom = null;
+      render();
+      syncEditor();
+      return;
+    }
+
+    if (state.mode === "link") {
+      if (!state.linkFrom) {
+        state.linkFrom = id;
+        state.selectedId = id;
+      } else if (state.linkFrom !== id) {
+        addEdge(state.linkFrom, id);
+        persist();
+        state.linkFrom = null;
+        state.selectedId = id;
+      }
+      render();
+      syncEditor();
+      return;
+    }
+
+    state.selectedId = id;
+    syncEditor();
+    render();
+
+    if (state.mode === "move" || state.mode === "add") {
+      const n = findNode(id);
+      const v = viewXY(n);
+      state.drag = {
+        id,
+        ox: pt.x - v.x,
+        oy: pt.y - v.y,
+        pointerId: evt.pointerId,
+      };
+      svg.setPointerCapture(evt.pointerId);
+    }
+  });
+
+  svg.addEventListener("pointermove", (evt) => {
+    if (!state.drag) return;
+    const n = findNode(state.drag.id);
+    if (!n) return;
+    const pt = svgPoint(evt);
+    const viewX = Math.round(pt.x - state.drag.ox);
+    const viewY = Math.round(pt.y - state.drag.oy);
+    const local = hitToLocal({ x: viewX, y: viewY });
+    const oldPid = nodePanelId(n);
+    // 合页拖移时保持在原叶坐标系，避免跨叶改写数据
+    if (isCombined()) {
+      n.x = Math.round(viewX - panelOffsetX(oldPid));
+      n.y = viewY;
+    } else {
+      n.x = local.x;
+      n.y = local.y;
+    }
+    const p = panelOf(oldPid);
+    n.x = Math.max(0, Math.min(p.width, n.x));
+    n.y = Math.max(0, Math.min(p.height, n.y));
+    render();
+  });
+
+  function endDrag() {
+    if (!state.drag) return;
+    state.drag = null;
+    persist();
+  }
+  svg.addEventListener("pointerup", endDrag);
+  svg.addEventListener("pointercancel", endDrag);
+
+  function writeFields() {
+    const n = state.selectedId ? findNode(state.selectedId) : null;
+    if (!n) return;
+    n.label = fLabel.value.trim();
+    n.note = fNote.value.trim();
+    n.allusion = fAllusion.value.trim();
+    n.shape = fShape.value;
+    n.status = fStatus.value;
+    persist();
+    render();
+  }
+  ["input", "change"].forEach((ev) => {
+    fLabel.addEventListener(ev, writeFields);
+    fNote.addEventListener(ev, writeFields);
+    fAllusion.addEventListener(ev, writeFields);
+    fShape.addEventListener(ev, writeFields);
+    fStatus.addEventListener(ev, writeFields);
+  });
+
+  document.querySelectorAll("[data-panel]").forEach((btn) => {
+    btn.addEventListener("click", () => setPanel(btn.dataset.panel));
+  });
+  document.querySelectorAll("[data-mode]").forEach((btn) => {
+    btn.addEventListener("click", () => setMode(btn.dataset.mode));
+  });
+
+  document.getElementById("btn-rect").addEventListener("click", () => {
+    const n = state.selectedId ? findNode(state.selectedId) : null;
+    if (!n) return;
+    n.shape = n.shape === "rect" ? "circle" : "rect";
+    fShape.value = n.shape;
+    persist();
+    render();
+  });
+
+  document.getElementById("btn-del").addEventListener("click", () => {
+    if (!state.selectedId) return;
+    removeNode(state.selectedId);
+    state.selectedId = null;
+    persist();
+    render();
+    syncEditor();
+  });
+
+  document.getElementById("btn-clear").addEventListener("click", () => {
+    if (isCombined()) {
+      alert("合页模式下不清空。请先切到「左叶」或「右叶」再清空该叶。");
+      return;
+    }
+    if (!confirm("清空本叶全部圆格和连线？已填文字也会删掉。")) return;
+    const p = panelOf(state.panel);
+    p.nodes = [];
+    p.edges = [];
+    state.selectedId = null;
+    persist();
+    render();
+    syncEditor();
+  });
+
+  document.getElementById("btn-swap").addEventListener("click", () => {
+    state.data.spreadOrder = spreadOrder() === "ab" ? "ba" : "ab";
+    state.data.spreadSwappedByUser = true;
+    persist();
+    loadPanelView();
+    render();
+  });
+
+  opacity.addEventListener("input", () => {
+    const op = String(Number(opacity.value) / 100);
+    underlayLeft.style.opacity = op;
+    underlayRight.style.opacity = op;
+  });
+
+  document.getElementById("btn-toggle-img").addEventListener("click", (e) => {
+    state.showImg = !state.showImg;
+    e.currentTarget.setAttribute("aria-pressed", String(state.showImg));
+    stage.classList.toggle("svg-only", !state.showImg);
+  });
+
+  document.getElementById("btn-allusion").addEventListener("click", () => {
+    let filled = 0;
+    let skipped = 0;
+    let unknown = 0;
+    for (const pid of Object.keys(state.data.panels)) {
+      for (const n of state.data.panels[pid].nodes || []) {
+        if (n.allusion && String(n.allusion).trim()) {
+          skipped += 1;
+          continue;
+        }
+        const text = lookupAllusion(n.label);
+        if (!text) {
+          unknown += 1;
+          continue;
+        }
+        n.allusion = text;
+        filled += 1;
+      }
+    }
+    persist();
+    render();
+    syncEditor();
+    alert(
+      `已补 ${filled} 格典故。\n` +
+        `原有典故未改：${skipped}\n` +
+        `无把握未写：${unknown}\n` +
+        `（数字格、生僻格名会留空）`
+    );
+  });
+
+  document.getElementById("btn-export").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify(state.data, null, 2)], {
+      type: "application/json",
+    });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "zhiyin-cells.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  document.getElementById("btn-save").addEventListener("click", () => {
+    persist();
+    alert("已写入本机 localStorage。");
+  });
+
+  document.getElementById("import").addEventListener("change", async (evt) => {
+    const file = evt.target.files && evt.target.files[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      if (!data.panels || !data.panels.a || !data.panels.b) {
+        throw new Error("缺 panels.a / panels.b");
+      }
+      state.data = data;
+      persist();
+      setPanel(state.panel);
+    } catch (err) {
+      alert("导入失败：" + err.message);
+    }
+    evt.target.value = "";
+  });
+
+  document.addEventListener("keydown", (evt) => {
+    if (evt.key === "Delete" || evt.key === "Backspace") {
+      if (document.activeElement && ["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) {
+        return;
+      }
+      document.getElementById("btn-del").click();
+    }
+    if (evt.key === "Escape") {
+      state.selectedId = null;
+      state.linkFrom = null;
+      render();
+      syncEditor();
+    }
+  });
+
+  async function boot() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        state.data = JSON.parse(saved);
+      } catch (_) {
+        state.data = null;
+      }
+    }
+    if (!state.data) {
+      const res = await fetch("./zhiyin-seed.json");
+      state.data = await res.json();
+    }
+    // keep existing filled cells; only normalize paths / missing fields
+    if (!state.data.panels) state.data.panels = {};
+    if (!state.data.panels.a) state.data.panels.a = { width: 652, height: 896, nodes: [], edges: [] };
+    if (!state.data.panels.b) state.data.panels.b = { width: 648, height: 910, nodes: [], edges: [] };
+    state.data.panels.a.image = "./assets/zhiyin-panel-a.jpg";
+    state.data.panels.b.image = "./assets/zhiyin-panel-b.jpg";
+    // 纠正旧默认 ab（左右反了）；已对调过的保留
+    if (!state.data.spreadOrder || state.data.spreadOrder === "ab") {
+      if (!state.data.spreadSwappedByUser) state.data.spreadOrder = "ba";
+    }
+    if (!Array.isArray(state.data.crossEdges)) state.data.crossEdges = [];
+    for (const pid of ["a", "b"]) {
+      const p = state.data.panels[pid];
+      if (!Array.isArray(p.nodes)) p.nodes = [];
+      if (!Array.isArray(p.edges)) p.edges = [];
+      for (const n of p.nodes) {
+        if (typeof n.allusion !== "string") n.allusion = "";
+        if (!n.panel) n.panel = pid;
+      }
+    }
+    setMode("add");
+    setPanel("ab");
+  }
+
+  boot();
+  </script>
+</body>
+</html>

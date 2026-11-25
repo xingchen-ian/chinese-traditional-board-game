@@ -1,0 +1,114 @@
+{
+  "object": {
+    "title": "折叠式《升官图》",
+    "accession": "故179983",
+    "holder": "故宫博物院",
+    "period": "清光绪",
+    "source": "https://www.dpm.org.cn/collection/utensil/232141.html",
+    "note": "试用本件。棋盘分区依藏品页三圈总述。格内德才功赃细文除白丁外均待核。公开站不嵌馆方大图。"
+  },
+  "spinner": ["德", "才", "功", "赃"],
+  "players": { "min": 2, "max": 6, "default": 3 },
+  "rings_overview": {
+    "outer": ["功名出身（白丁至状元）", "京县衙门", "布政司衙门", "外省衙门", "按察司衙门", "外县衙门", "外府衙门", "外州衙门"],
+    "middle": ["六部衙门", "都察院衙门", "九卿衙门", "京府衙门", "翰林院衙门"],
+    "inner": ["太傅", "太师", "太保"],
+    "status": "verified-overview"
+  },
+  "cells": [
+    {
+      "id": "baiding",
+      "name": "白丁",
+      "ring": "outer",
+      "series": "功名出身",
+      "start": true,
+      "board": { "lane": "gongming", "order": 0 },
+      "moves": { "德": "监生", "才": "案首", "功": "童生", "赃": "不动" },
+      "source": "故宫藏品页说明",
+      "status": "verified"
+    },
+    {
+      "id": "tongsheng",
+      "name": "童生",
+      "ring": "outer",
+      "series": "功名出身",
+      "board": { "lane": "gongming", "order": 1 },
+      "moves": { "德": null, "才": null, "功": null, "赃": null },
+      "note": "名从白丁格「功童生」写出；本格四向待核",
+      "status": "pending"
+    },
+    {
+      "id": "anshou",
+      "name": "案首",
+      "ring": "outer",
+      "series": "功名出身",
+      "board": { "lane": "gongming", "order": 2 },
+      "moves": { "德": null, "才": null, "功": null, "赃": null },
+      "note": "名从白丁格「才案首」写出；本格四向待核",
+      "status": "pending"
+    },
+    {
+      "id": "jiansheng",
+      "name": "监生",
+      "ring": "outer",
+      "series": "功名出身",
+      "board": { "lane": "gongming", "order": 3 },
+      "moves": { "德": null, "才": null, "功": null, "赃": null },
+      "note": "名从白丁格「德监生」写出；本格四向待核",
+      "status": "pending"
+    },
+    {
+      "id": "zhuangyuan",
+      "name": "状元",
+      "ring": "outer",
+      "series": "功名出身",
+      "board": { "lane": "gongming", "order": 9 },
+      "moves": { "德": null, "才": null, "功": null, "赃": null },
+      "note": "藏品页总述外圈「白丁到状元」；中间诸格与四向待核",
+      "status": "pending"
+    },
+    {
+      "id": "taifu",
+      "name": "太傅",
+      "ring": "inner",
+      "series": "内圈",
+      "board": { "lane": "inner", "order": 0 },
+      "moves": { "德": null, "才": null, "功": null, "赃": null },
+      "status": "pending"
+    },
+    {
+      "id": "taishi",
+      "name": "太师",
+      "ring": "inner",
+      "series": "内圈",
+      "board": { "lane": "inner", "order": 1 },
+      "moves": { "德": null, "才": null, "功": null, "赃": null },
+      "status": "pending"
+    },
+    {
+      "id": "taibao",
+      "name": "太保",
+      "ring": "inner",
+      "series": "内圈",
+      "board": { "lane": "inner", "order": 2 },
+      "moves": { "德": null, "才": null, "功": null, "赃": null },
+      "status": "pending"
+    }
+  ],
+  "series_zones": [
+    { "id": "gongming", "name": "功名出身", "ring": "outer", "status": "verified-name" },
+    { "id": "jingxian", "name": "京县衙门", "ring": "outer", "status": "verified-name" },
+    { "id": "buzheng", "name": "布政司衙门", "ring": "outer", "status": "verified-name" },
+    { "id": "waisheng", "name": "外省衙门", "ring": "outer", "status": "verified-name" },
+    { "id": "ancha", "name": "按察司衙门", "ring": "outer", "status": "verified-name" },
+    { "id": "waixian", "name": "外县衙门", "ring": "outer", "status": "verified-name" },
+    { "id": "waifu", "name": "外府衙门", "ring": "outer", "status": "verified-name" },
+    { "id": "waizhou", "name": "外州衙门", "ring": "outer", "status": "verified-name" },
+    { "id": "liubu", "name": "六部衙门", "ring": "middle", "status": "verified-name" },
+    { "id": "duchayuan", "name": "都察院衙门", "ring": "middle", "status": "verified-name" },
+    { "id": "jiuqing", "name": "九卿衙门", "ring": "middle", "status": "verified-name" },
+    { "id": "jingfu", "name": "京府衙门", "ring": "middle", "status": "verified-name" },
+    { "id": "hanlin", "name": "翰林院衙门", "ring": "middle", "status": "verified-name" },
+    { "id": "inner", "name": "内圈", "ring": "inner", "status": "verified-name" }
+  ]
+}
