@@ -312,6 +312,60 @@ figure.fig figcaption .src {
   z-index: 0;
 }
 
+.places-map-svg {
+  height: auto;
+  min-height: 0;
+  padding: 0.35rem;
+  background:
+    linear-gradient(180deg, #eef1ec 0%, #e7ebe4 55%, #e2e6df 100%);
+}
+
+.places-map-svg svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.places-map-svg .china-land {
+  fill: #d8d3c8;
+  stroke: #6f6a60;
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+}
+
+.places-map-svg .place-mark {
+  cursor: pointer;
+}
+
+.places-map-svg .place-label {
+  fill: #1c1b18;
+  font-family: var(--sans);
+  font-size: 11px;
+  paint-order: stroke;
+  stroke: #f7f6f2;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.places-map-svg .place-mark.is-active circle {
+  stroke: #1c1b18;
+  stroke-width: 1.6;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(1.35);
+}
+
+.places-map-svg .place-mark.is-active .place-label {
+  font-weight: 600;
+  fill: #0d2e28;
+}
+
+#places-map-detail {
+  margin: 0.2rem 0 0.55rem;
+  min-height: 1.4em;
+}
+
 .places-legend {
   display: flex;
   flex-wrap: wrap;

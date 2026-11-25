@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/site.css">
-  <link rel="stylesheet" href="../assets/vendor/leaflet/leaflet.css">
   <script src="../assets/site.js" defer></script>
 </head>
 <body>
@@ -124,9 +123,10 @@
       <p class="aside">吴本定马见识典书号 HY6663。<a href="https://www.shidianguji.com/book/HY6663/chapter/1kv0646r3ounn">打开这一章</a>，<a href="https://www.shidianguji.com/book/HY6663">书页</a>。高兆本定马见识典书号 ZDCS11036。<a href="https://www.shidianguji.com/book/ZDCS11036/chapter/1mjax1ipe14p6">打开这一章</a>，<a href="https://www.shidianguji.com/book/ZDCS11036">书页</a>。NCL153500022A 的现有 OCR 里没有看到定马句。<a href="https://www.shidianguji.com/book/NCL153500022A/chapter/1m0vc6aek2x46">打开这一章</a>，<a href="https://www.shidianguji.com/book/NCL153500022A">书页</a>。这三个书号都是识典编号，不是哈佛燕京索书号。ZDCS11036 与 NCL153500022A 也还没有鉴定为同一印本，更没有写成「高兆原刻本」。</p>
 
       <h2 id="places-map">圆格地名今地</h2>
-      <p class="measure">把掷饮录文台里已标的地名，约放到今地图上，并附表。坐标是总览用的约位；同名多处、传说地或格名残泐的标「待核」。编号折、羊肠道等机关格不画点。</p>
+      <p class="measure">把掷饮录文台里已标的地名，约标在中国轮廓图上，并附表。不依赖在线底图。坐标是总览约位；同名多处、传说地或格名残泐的标「待核」。编号折、羊肠道等机关格不画点。点选圆点可看备注。</p>
       <p class="aside" id="places-map-status">正在载入地点数据…</p>
-      <div id="places-map-el" class="places-map" role="region" aria-label="圆格地名地图"></div>
+      <div id="places-map-el" class="places-map places-map-svg" role="region" aria-label="圆格地名中国轮廓图"></div>
+      <p class="aside" id="places-map-detail" hidden></p>
       <div class="places-legend aside" aria-hidden="true">
         <span><i class="pin pin-ok"></i>较确</span>
         <span><i class="pin pin-approx"></i>约</span>
@@ -163,13 +163,21 @@
       <p>最近更新：2026年11月。</p>
     </footer>
   </div>
-  <script src="../assets/vendor/leaflet/leaflet.js"></script>
   <script>
     (function () {
       const statusEl = document.getElementById("places-map-status");
       const mapEl = document.getElementById("places-map-el");
+      const detailEl = document.getElementById("places-map-detail");
       const tbody = document.querySelector("#places-table tbody");
       if (!mapEl || !tbody) return;
+
+      const W = 1000;
+      const H = 760;
+      const LNG0 = 73;
+      const LNG1 = 135;
+      const LAT0 = 17;
+      const LAT1 = 54;
+      const pad = 18;
 
       const pinColor = {
         "较确": "#1a4a40",
@@ -177,6 +185,31 @@
         "待核": "#8a4b3a",
         "—": "#5c584f"
       };
+
+      function project(lng, lat) {
+        const x = pad + ((lng - LNG0) / (LNG1 - LNG0)) * (W - pad * 2);
+        const y = pad + ((LAT1 - lat) / (LAT1 - LAT0)) * (H - pad * 2);
+        return [x, y];
+      }
+
+      function ringToPath(ring) {
+        return ring
+          .map(function (pt, i) {
+            const p = project(pt[0], pt[1]);
+            return (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1);
+          })
+          .join(" ") + " Z";
+      }
+
+      function geomToPath(geom) {
+        const parts = [];
+        (geom.coordinates || []).forEach(function (poly) {
+          poly.forEach(function (ring) {
+            parts.push(ringToPath(ring));
+          });
+        });
+        return parts.join(" ");
+      }
 
       function fillTable(places) {
         tbody.textContent = "";
@@ -197,56 +230,102 @@
           });
       }
 
-      function drawMap(mapped) {
-        if (typeof L === "undefined") {
-          statusEl.textContent += " 地图库未载入，表仍可看。";
-          return;
-        }
-        const map = L.map(mapEl, { scrollWheelZoom: false }).setView([33.5, 113], 5);
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          maxZoom: 18,
-          attribution: "&copy; OpenStreetMap"
-        }).addTo(map);
-        const bounds = [];
-        mapped.forEach(function (p) {
-          const fill = pinColor[p.confidence] || pinColor["约"];
-          const m = L.marker([p.lat, p.lng], {
-            icon: L.divIcon({
-              className: "places-marker",
-              html: '<span style="background:' + fill + '"></span>',
-              iconSize: [14, 14],
-              iconAnchor: [7, 7]
-            })
-          }).addTo(map);
-          m.bindPopup(
-            "<strong>" + p.label + "</strong><br>" +
-            (p.modern || "") +
-            (p.allusion ? "<br><span class='popup-note'>" + p.allusion + "</span>" : "") +
-            "<br><span class='popup-note'>" + (p.confidence || "") + "</span>"
-          );
-          bounds.push([p.lat, p.lng]);
-        });
-        if (bounds.length) map.fitBounds(bounds, { padding: [28, 28], maxZoom: 6 });
+      function showDetail(p) {
+        detailEl.hidden = false;
+        detailEl.textContent =
+          p.label + " · " + (p.modern || "") +
+          "（" + (p.confidence || "") + "）" +
+          (p.allusion ? " — " + p.allusion : "");
       }
 
-      fetch("places-geo.json")
-        .then(function (r) {
-          if (!r.ok) throw new Error("HTTP " + r.status);
+      function drawMap(outline, mapped) {
+        mapEl.textContent = "";
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+        svg.setAttribute("role", "img");
+        svg.setAttribute("aria-label", "中国轮廓与圆格地名标注");
+
+        const land = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        land.setAttribute("d", geomToPath(outline.geometry));
+        land.setAttribute("class", "china-land");
+        svg.appendChild(land);
+
+        const marks = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        marks.setAttribute("class", "place-marks");
+
+        mapped.forEach(function (p, i) {
+          const xy = project(p.lng, p.lat);
+          const fill = pinColor[p.confidence] || pinColor["约"];
+          const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+          g.setAttribute("class", "place-mark");
+          g.setAttribute("tabindex", "0");
+          g.setAttribute("role", "button");
+          g.setAttribute("aria-label", p.label + "，" + (p.modern || ""));
+
+          const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          c.setAttribute("cx", xy[0].toFixed(1));
+          c.setAttribute("cy", xy[1].toFixed(1));
+          c.setAttribute("r", "4.2");
+          c.setAttribute("fill", fill);
+          c.setAttribute("stroke", "#f7f6f2");
+          c.setAttribute("stroke-width", "1.2");
+
+          const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          t.setAttribute("x", xy[0].toFixed(1));
+          t.setAttribute("y", (i % 2 ? xy[1] + 14 : xy[1] - 7).toFixed(1));
+          t.setAttribute("text-anchor", "middle");
+          t.setAttribute("class", "place-label");
+          t.textContent = p.label.replace(/[？?]/g, "");
+
+          function activate() {
+            svg.querySelectorAll(".place-mark.is-active").forEach(function (el) {
+              el.classList.remove("is-active");
+            });
+            g.classList.add("is-active");
+            showDetail(p);
+          }
+          g.addEventListener("click", activate);
+          g.addEventListener("keydown", function (ev) {
+            if (ev.key === "Enter" || ev.key === " ") {
+              ev.preventDefault();
+              activate();
+            }
+          });
+
+          g.appendChild(c);
+          g.appendChild(t);
+          marks.appendChild(g);
+        });
+
+        svg.appendChild(marks);
+        mapEl.appendChild(svg);
+      }
+
+      Promise.all([
+        fetch("places-geo.json").then(function (r) {
+          if (!r.ok) throw new Error("places-geo HTTP " + r.status);
+          return r.json();
+        }),
+        fetch("assets/china-outline.json").then(function (r) {
+          if (!r.ok) throw new Error("china-outline HTTP " + r.status);
           return r.json();
         })
-        .then(function (data) {
+      ])
+        .then(function (pair) {
+          const data = pair[0];
+          const outline = pair[1];
           const places = data.places || [];
           const mapped = places.filter(function (p) {
             return typeof p.lat === "number" && typeof p.lng === "number";
           });
           statusEl.textContent =
             (data.note || "") +
-            " 已定点 " + mapped.length + " 处，表内共 " + places.length + " 条。";
+            " 已定点 " + mapped.length + " 处，表内共 " + places.length + " 条。轮廓为简化国界，仅供总览。";
           fillTable(places);
-          drawMap(mapped);
+          drawMap(outline, mapped);
         })
         .catch(function (err) {
-          statusEl.textContent = "地点数据载入失败：" + err.message;
+          statusEl.textContent = "地点／轮廓数据载入失败：" + err.message;
         });
     })();
   </script>
