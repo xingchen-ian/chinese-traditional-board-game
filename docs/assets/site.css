@@ -253,12 +253,48 @@ td.pending { color: var(--muted); }
 
 .site-footer p { margin: 0.2rem 0; }
 
+figure.fig {
+  margin: 1rem 0 1.35rem;
+  max-width: var(--wide);
+}
+
+figure.fig img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  background: #eceae4;
+}
+
+figure.fig figcaption {
+  margin-top: 0.45rem;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--muted);
+  font-family: var(--sans);
+}
+
+figure.fig figcaption .src {
+  display: block;
+  margin-top: 0.2rem;
+}
+
+.fig-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1rem 0 1.35rem;
+}
+
+.fig-pair figure.fig { margin: 0; }
+
 @media (max-width: 40rem) {
   html { font-size: 17px; }
   .sheet { width: min(var(--wide), calc(100% - 0.8rem)); margin-top: 0.4rem; }
   .site-header, .site-footer, main { padding-left: 1rem; padding-right: 1rem; }
   h1 { font-size: 1.5rem; }
   .stack { grid-template-columns: 1fr; }
+  .fig-pair { grid-template-columns: 1fr; }
   .js .nav-toggle { display: inline-block; }
   .js .site-nav { display: none; }
   .js .site-nav.is-open { display: block; }

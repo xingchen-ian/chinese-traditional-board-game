@@ -1,0 +1,36 @@
+Image credits (figures used on the public site)
+================================================
+
+goose-met-dp867954.jpg
+  Source: Metropolitan Museum of Art via Wikimedia Commons
+  File: https://commons.wikimedia.org/wiki/File:Game_of_the_Goose_MET_DP867954.jpg
+  License: CC0 1.0
+
+goose-1850.png
+  Source: Swiss Museum of Games via Wikimedia Commons
+  File: https://commons.wikimedia.org/wiki/File:Game_of_the_Goose_(from_1850).png
+  License: Attribution required (copyright holder allows use with attribution)
+
+shengguan-tu-commons.png
+  Source: Wikimedia Commons
+  File: https://commons.wikimedia.org/wiki/File:Shengguan_Tu.png
+  License: Public domain (Qing-era board; US PD before 1931)
+  Note: NOT Palace Museum gu 179983
+
+xiao-shengguan-tu.jpg
+  Source: Wikimedia Commons (User:Outlookxp)
+  File: https://commons.wikimedia.org/wiki/File:%E5%B0%8F%E5%8D%87%E5%AE%98%E5%9C%96.jpg
+  License: CC BY-SA 3.0
+  Note: NOT Palace Museum gu 179983
+
+Related crops (not in this folder):
+  docs/lansheng/assets/wu-fanli-371-0027.jpg
+  docs/lansheng/assets/wu-sample-371-0027.jpg
+    Source: National Archives of Japan, Naikaku Bunko, request no. 371-0027
+    Via Wikimedia Commons PDF (public domain):
+    https://commons.wikimedia.org/wiki/File:NAJDA-371-0027_%E6%AA%80%E5%87%A0%E5%8F%A2%E6%9B%B8%E4%BD%99%E9%9B%86_%E5%B7%BB%E4%B8%8B.pdf
+    Official record: https://www.digital.archives.go.jp/item/3990128
+
+  docs/lansheng/zhiyin/assets/zhiyin-panel-*.jpg
+    Working photos/scans for transcription; imprint lineage unverified.
+    Not for version identification.
