@@ -1,0 +1,1806 @@
+{
+  "source": "user-photo-2026-11-22",
+  "title": "掷饮图（印本待核）",
+  "note": "两叶照片上的圆格路径图。格名与旁注由人工填写；印本系属未核，勿与吴陈琰本或高兆本混称。",
+  "panels": {
+    "a": {
+      "width": 652,
+      "height": 896,
+      "image": "./assets/zhiyin-panel-a.jpg",
+      "caption": "左叶（有「擲飲」大字）",
+      "nodes": [
+        {
+          "id": "a-001",
+          "panel": "a",
+          "x": 132,
+          "y": 109,
+          "r": 14,
+          "shape": "circle",
+          "label": "雁塔",
+          "note": "遇本X后方行为题名不遇罚一杯，缁衣经行",
+          "status": "pending",
+          "allusion": "西安大雁塔；唐进士有雁塔题名之习。"
+        },
+        {
+          "id": "a-002",
+          "panel": "a",
+          "x": 136,
+          "y": 674,
+          "r": 14,
+          "shape": "circle",
+          "label": "劳劳亭",
+          "note": "",
+          "status": "pending",
+          "allusion": "金陵劳劳亭；古送别之地。李白有《劳劳亭》。"
+        },
+        {
+          "id": "a-003",
+          "panel": "a",
+          "x": 132,
+          "y": 749,
+          "r": 14,
+          "shape": "circle",
+          "label": "浣溪沙",
+          "note": "词客、美人会此一杯",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-004",
+          "panel": "a",
+          "x": 130,
+          "y": 814,
+          "r": 14,
+          "shape": "circle",
+          "label": "剑阁",
+          "note": "剑侠至此一杯",
+          "status": "pending",
+          "allusion": "蜀道剑阁；李白《蜀道难》写剑阁险。"
+        },
+        {
+          "id": "a-005",
+          "panel": "a",
+          "x": 237,
+          "y": 816,
+          "r": 14,
+          "shape": "circle",
+          "label": "天竺",
+          "note": "缁衣至此一杯",
+          "status": "pending",
+          "allusion": "杭州上天竺／下天竺一带佛寺名胜。"
+        },
+        {
+          "id": "a-006",
+          "panel": "a",
+          "x": 335,
+          "y": 813,
+          "r": 14,
+          "shape": "circle",
+          "label": "赤壁",
+          "note": "词客、缁衣、羽士会此各一杯",
+          "status": "pending",
+          "allusion": "常见两系：三国周瑜破曹；苏轼黄州前后《赤壁赋》。图上取哪一系待核。"
+        },
+        {
+          "id": "a-007",
+          "panel": "a",
+          "x": 441,
+          "y": 815,
+          "r": 14,
+          "shape": "circle",
+          "label": "钓台",
+          "note": "渔父至此一杯",
+          "status": "pending",
+          "allusion": "常见指严子陵钓台（富春江）。是否即本图此格待核。"
+        },
+        {
+          "id": "a-008",
+          "panel": "a",
+          "x": 541,
+          "y": 820,
+          "r": 14,
+          "shape": "rect",
+          "label": "滕王阁",
+          "note": "",
+          "status": "pending",
+          "allusion": "南昌滕王阁；王勃《滕王阁序》。"
+        },
+        {
+          "id": "a-009",
+          "panel": "a",
+          "x": 544,
+          "y": 740,
+          "r": 14,
+          "shape": "circle",
+          "label": "庐山",
+          "note": "至此各一杯，美人免",
+          "status": "pending",
+          "allusion": "江西庐山；陶渊明、李白等屡入诗文。"
+        },
+        {
+          "id": "a-010",
+          "panel": "a",
+          "x": 543,
+          "y": 669,
+          "r": 14,
+          "shape": "circle",
+          "label": "易水",
+          "note": "剑侠至此一杯",
+          "status": "pending",
+          "allusion": "荆轲入秦前，燕太子丹饯于易水；「风萧萧兮易水寒」。"
+        },
+        {
+          "id": "a-011",
+          "panel": "a",
+          "x": 543,
+          "y": 602,
+          "r": 14,
+          "shape": "circle",
+          "label": "滹沱河",
+          "note": "先有马在此，后来者许经过不许会，犯则罚后来者一杯，回本位",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-012",
+          "panel": "a",
+          "x": 543,
+          "y": 526,
+          "r": 14,
+          "shape": "circle",
+          "label": "井径",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-013",
+          "panel": "a",
+          "x": 544,
+          "y": 464,
+          "r": 14,
+          "shape": "circle",
+          "label": "响X廊？",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-014",
+          "panel": "a",
+          "x": 543,
+          "y": 386,
+          "r": 14,
+          "shape": "circle",
+          "label": "斗鸡坡",
+          "note": "会者饮会酒外仍赌三胜",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-015",
+          "panel": "a",
+          "x": 543,
+          "y": 316,
+          "r": 14,
+          "shape": "circle",
+          "label": "虎丘",
+          "note": "",
+          "status": "pending",
+          "allusion": "苏州虎丘；传吴王阖闾葬处，有剑池、千人石等名胜。"
+        },
+        {
+          "id": "a-016",
+          "panel": "a",
+          "x": 539,
+          "y": 247,
+          "r": 14,
+          "shape": "circle",
+          "label": "醉翁亭",
+          "note": "至此一杯，会各一杯",
+          "status": "pending",
+          "allusion": "欧阳修滁州《醉翁亭记》。"
+        },
+        {
+          "id": "a-017",
+          "panel": "a",
+          "x": 545,
+          "y": 184,
+          "r": 14,
+          "shape": "circle",
+          "label": "鸿门",
+          "note": "剑侠至此一杯",
+          "status": "pending",
+          "allusion": "秦末项羽宴刘邦于鸿门（鸿门宴）。"
+        },
+        {
+          "id": "a-018",
+          "panel": "a",
+          "x": 545,
+          "y": 106,
+          "r": 14,
+          "shape": "rect",
+          "label": "蓝关？",
+          "note": "至此一杯，越过免饮",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-019",
+          "panel": "a",
+          "x": 437,
+          "y": 107,
+          "r": 14,
+          "shape": "circle",
+          "label": "天台",
+          "note": "",
+          "status": "pending",
+          "allusion": "天台山；刘晨、阮肇入天台遇仙传说。"
+        },
+        {
+          "id": "a-020",
+          "panel": "a",
+          "x": 341,
+          "y": 100,
+          "r": 14,
+          "shape": "circle",
+          "label": "太湖",
+          "note": "",
+          "status": "pending",
+          "allusion": "江南太湖；范蠡、唐人诗咏等多涉。"
+        },
+        {
+          "id": "a-021",
+          "panel": "a",
+          "x": 235,
+          "y": 105,
+          "r": 14,
+          "shape": "circle",
+          "label": "三笑堂",
+          "note": "词客、缁衣、羽士至此各饮一杯",
+          "status": "pending",
+          "allusion": "虎溪三笑：慧远、陶渊明、陆修静相送过溪而笑（故事流传，史实有争议）。"
+        },
+        {
+          "id": "a-022",
+          "panel": "a",
+          "x": 7,
+          "y": 97,
+          "r": 14,
+          "shape": "circle",
+          "label": "西湖",
+          "note": "至此各一杯",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-023",
+          "panel": "a",
+          "x": 13,
+          "y": 172,
+          "r": 14,
+          "shape": "circle",
+          "label": "章台",
+          "note": "美人至此一杯",
+          "status": "pending",
+          "allusion": "经典典故：完璧归赵\n《史记》：秦王坐章台见相如，蔺相如就是在这里把和氏璧献给秦王。荆轲刺秦王的召见场所也和章台体系有关。\n\n典故：走马章台（《汉书·张敞传》），张敞下班骑马经过这条街，这个成语由此而来\n\n诗词引申：唐代韩翃《章台柳》，“章台柳，章台柳，昔日青青今在否”，这里的章台，就是这条长安街道；后世诗文里“章台”慢慢成为风月场所的代称"
+        },
+        {
+          "id": "a-024",
+          "panel": "a",
+          "x": 131,
+          "y": 177,
+          "r": 14,
+          "shape": "circle",
+          "label": "洞庭湖",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-025",
+          "panel": "a",
+          "x": 235,
+          "y": 171,
+          "r": 14,
+          "shape": "circle",
+          "label": "鹦鹉洲",
+          "note": "",
+          "status": "pending",
+          "allusion": "武汉长江鹦鹉洲；崔颢《黄鹤楼》「芳草萋萋鹦鹉洲」。"
+        },
+        {
+          "id": "a-026",
+          "panel": "a",
+          "x": 335,
+          "y": 178,
+          "r": 14,
+          "shape": "circle",
+          "label": "销魂桥？",
+          "note": "至此必X美人相会或美人已遇过而后再得如美人在前不论惟美人经行",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-027",
+          "panel": "a",
+          "x": 446,
+          "y": 175,
+          "r": 14,
+          "shape": "circle",
+          "label": "曲江",
+          "note": "词客至此一杯",
+          "status": "pending",
+          "allusion": "唐长安曲江；进士宴游之地。"
+        },
+        {
+          "id": "a-028",
+          "panel": "a",
+          "x": 445,
+          "y": 251,
+          "r": 14,
+          "shape": "circle",
+          "label": "醴泉",
+          "note": "邀同志对饮一大杯，无则独饮，会各一杯",
+          "status": "pending",
+          "allusion": "甘泉；《礼记》等有「天降甘露，地出醴泉」一类说法。"
+        },
+        {
+          "id": "a-029",
+          "panel": "a",
+          "x": 437,
+          "y": 318,
+          "r": 14,
+          "shape": "circle",
+          "label": "戏马台",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-030",
+          "panel": "a",
+          "x": 445,
+          "y": 367,
+          "r": 14,
+          "shape": "circle",
+          "label": "羊肠道一",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-031",
+          "panel": "a",
+          "x": 440,
+          "y": 401,
+          "r": 14,
+          "shape": "circle",
+          "label": "二",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-032",
+          "panel": "a",
+          "x": 439,
+          "y": 443,
+          "r": 14,
+          "shape": "circle",
+          "label": "三",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-033",
+          "panel": "a",
+          "x": 440,
+          "y": 482,
+          "r": 14,
+          "shape": "circle",
+          "label": "四",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-034",
+          "panel": "a",
+          "x": 438,
+          "y": 520,
+          "r": 14,
+          "shape": "circle",
+          "label": "五",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-035",
+          "panel": "a",
+          "x": 441,
+          "y": 560,
+          "r": 14,
+          "shape": "circle",
+          "label": "六",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-036",
+          "panel": "a",
+          "x": 440,
+          "y": 606,
+          "r": 14,
+          "shape": "circle",
+          "label": "七",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-037",
+          "panel": "a",
+          "x": 440,
+          "y": 647,
+          "r": 14,
+          "shape": "circle",
+          "label": "八",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-038",
+          "panel": "a",
+          "x": 442,
+          "y": 693,
+          "r": 14,
+          "shape": "circle",
+          "label": "九",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-039",
+          "panel": "a",
+          "x": 441,
+          "y": 741,
+          "r": 14,
+          "shape": "circle",
+          "label": "十",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-040",
+          "panel": "a",
+          "x": 387,
+          "y": 745,
+          "r": 14,
+          "shape": "circle",
+          "label": "十一",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-041",
+          "panel": "a",
+          "x": 343,
+          "y": 742,
+          "r": 14,
+          "shape": "circle",
+          "label": "十二",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-042",
+          "panel": "a",
+          "x": 287,
+          "y": 747,
+          "r": 14,
+          "shape": "circle",
+          "label": "十三",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-043",
+          "panel": "a",
+          "x": 235,
+          "y": 745,
+          "r": 14,
+          "shape": "circle",
+          "label": "十四",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-044",
+          "panel": "a",
+          "x": 237,
+          "y": 672,
+          "r": 14,
+          "shape": "circle",
+          "label": "十五",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-045",
+          "panel": "a",
+          "x": 282,
+          "y": 671,
+          "r": 14,
+          "shape": "circle",
+          "label": "十六",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-046",
+          "panel": "a",
+          "x": 334,
+          "y": 671,
+          "r": 14,
+          "shape": "circle",
+          "label": "十七",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-047",
+          "panel": "a",
+          "x": 339,
+          "y": 632,
+          "r": 14,
+          "shape": "circle",
+          "label": "十八",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-048",
+          "panel": "a",
+          "x": 341,
+          "y": 586,
+          "r": 14,
+          "shape": "circle",
+          "label": "十九",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-049",
+          "panel": "a",
+          "x": 339,
+          "y": 549,
+          "r": 14,
+          "shape": "circle",
+          "label": "二十",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-050",
+          "panel": "a",
+          "x": 338,
+          "y": 515,
+          "r": 14,
+          "shape": "circle",
+          "label": "二十一",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-051",
+          "panel": "a",
+          "x": 340,
+          "y": 481,
+          "r": 14,
+          "shape": "circle",
+          "label": "二十二",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-052",
+          "panel": "a",
+          "x": 339,
+          "y": 430,
+          "r": 14,
+          "shape": "circle",
+          "label": "二十三",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-053",
+          "panel": "a",
+          "x": 342,
+          "y": 400,
+          "r": 14,
+          "shape": "circle",
+          "label": "二十四",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-054",
+          "panel": "a",
+          "x": 347,
+          "y": 355,
+          "r": 14,
+          "shape": "circle",
+          "label": "二十五",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-055",
+          "panel": "a",
+          "x": 342,
+          "y": 317,
+          "r": 14,
+          "shape": "circle",
+          "label": "二十六",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-056",
+          "panel": "a",
+          "x": 336,
+          "y": 245,
+          "r": 14,
+          "shape": "circle",
+          "label": "龙门",
+          "note": "词客须X过，如住此一杯回本位",
+          "status": "pending",
+          "allusion": "常见两系：禹凿龙门；或科举「鱼跃龙门」。图上取哪一系待核。"
+        },
+        {
+          "id": "a-057",
+          "panel": "a",
+          "x": 237,
+          "y": 247,
+          "r": 14,
+          "shape": "circle",
+          "label": "高阳里",
+          "note": "至此一杯，会各一杯",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "a-058",
+          "panel": "a",
+          "x": 131,
+          "y": 249,
+          "r": 14,
+          "shape": "circle",
+          "label": "惶恐滩",
+          "note": "",
+          "status": "pending",
+          "allusion": "赣江十八滩之一；文天祥《过零丁洋》「惶恐滩头说惶恐」。"
+        },
+        {
+          "id": "a-059",
+          "panel": "a",
+          "x": 9,
+          "y": 242,
+          "r": 14,
+          "shape": "circle",
+          "label": "雨花台",
+          "note": "",
+          "status": "pending",
+          "allusion": "南京雨花台。"
+        }
+      ],
+      "edges": [
+        {
+          "from": "a-015",
+          "to": "a-014"
+        },
+        {
+          "from": "a-023",
+          "to": "a-024"
+        },
+        {
+          "from": "a-024",
+          "to": "a-025"
+        },
+        {
+          "from": "a-025",
+          "to": "a-026"
+        },
+        {
+          "from": "a-059",
+          "to": "a-058"
+        },
+        {
+          "from": "a-058",
+          "to": "a-057"
+        },
+        {
+          "from": "a-057",
+          "to": "a-056"
+        },
+        {
+          "from": "a-056",
+          "to": "a-055"
+        },
+        {
+          "from": "a-055",
+          "to": "a-054"
+        },
+        {
+          "from": "a-054",
+          "to": "a-053"
+        },
+        {
+          "from": "a-053",
+          "to": "a-052"
+        },
+        {
+          "from": "a-052",
+          "to": "a-051"
+        },
+        {
+          "from": "a-051",
+          "to": "a-050"
+        },
+        {
+          "from": "a-050",
+          "to": "a-049"
+        },
+        {
+          "from": "a-049",
+          "to": "a-048"
+        },
+        {
+          "from": "a-048",
+          "to": "a-047"
+        },
+        {
+          "from": "a-047",
+          "to": "a-046"
+        },
+        {
+          "from": "a-046",
+          "to": "a-045"
+        },
+        {
+          "from": "a-045",
+          "to": "a-044"
+        },
+        {
+          "from": "a-044",
+          "to": "a-043"
+        },
+        {
+          "from": "a-043",
+          "to": "a-042"
+        },
+        {
+          "from": "a-042",
+          "to": "a-041"
+        },
+        {
+          "from": "a-041",
+          "to": "a-040"
+        },
+        {
+          "from": "a-040",
+          "to": "a-039"
+        },
+        {
+          "from": "a-039",
+          "to": "a-038"
+        },
+        {
+          "from": "a-038",
+          "to": "a-037"
+        },
+        {
+          "from": "a-037",
+          "to": "a-036"
+        },
+        {
+          "from": "a-036",
+          "to": "a-035"
+        },
+        {
+          "from": "a-035",
+          "to": "a-034"
+        },
+        {
+          "from": "a-034",
+          "to": "a-033"
+        },
+        {
+          "from": "a-033",
+          "to": "a-032"
+        },
+        {
+          "from": "a-032",
+          "to": "a-031"
+        },
+        {
+          "from": "a-031",
+          "to": "a-030"
+        },
+        {
+          "from": "a-030",
+          "to": "a-029"
+        },
+        {
+          "from": "a-029",
+          "to": "a-028"
+        },
+        {
+          "from": "a-028",
+          "to": "a-027"
+        },
+        {
+          "from": "a-027",
+          "to": "a-026"
+        },
+        {
+          "from": "a-004",
+          "to": "a-005"
+        },
+        {
+          "from": "a-005",
+          "to": "a-006"
+        },
+        {
+          "from": "a-006",
+          "to": "a-007"
+        },
+        {
+          "from": "a-007",
+          "to": "a-008"
+        },
+        {
+          "from": "a-008",
+          "to": "a-009"
+        },
+        {
+          "from": "a-009",
+          "to": "a-010"
+        },
+        {
+          "from": "a-010",
+          "to": "a-011"
+        },
+        {
+          "from": "a-011",
+          "to": "a-012"
+        },
+        {
+          "from": "a-012",
+          "to": "a-013"
+        },
+        {
+          "from": "a-013",
+          "to": "a-014"
+        },
+        {
+          "from": "a-015",
+          "to": "a-016"
+        },
+        {
+          "from": "a-016",
+          "to": "a-017"
+        },
+        {
+          "from": "a-017",
+          "to": "a-018"
+        },
+        {
+          "from": "a-018",
+          "to": "a-019"
+        },
+        {
+          "from": "a-019",
+          "to": "a-020"
+        },
+        {
+          "from": "a-020",
+          "to": "a-021"
+        },
+        {
+          "from": "a-021",
+          "to": "a-001"
+        },
+        {
+          "from": "a-001",
+          "to": "a-022"
+        },
+        {
+          "from": "a-002",
+          "to": "a-003"
+        },
+        {
+          "from": "a-003",
+          "to": "a-004"
+        }
+      ]
+    },
+    "b": {
+      "width": 648,
+      "height": 910,
+      "image": "./assets/zhiyin-panel-b.jpg",
+      "caption": "右叶（有「凡例」框）",
+      "nodes": [
+        {
+          "id": "b-001",
+          "panel": "b",
+          "x": 521,
+          "y": 94,
+          "r": 14,
+          "shape": "circle",
+          "label": "雁荡",
+          "note": "",
+          "status": "pending",
+          "allusion": "雁荡山；浙东名胜。"
+        },
+        {
+          "id": "b-002",
+          "panel": "b",
+          "x": 522,
+          "y": 167,
+          "r": 14,
+          "shape": "circle",
+          "label": "桃叶渡？",
+          "note": "美人至此一杯，X到者滴一色遇X饮，羽士免",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-003",
+          "panel": "b",
+          "x": 522,
+          "y": 238,
+          "r": 14,
+          "shape": "circle",
+          "label": "巫山上峡",
+          "note": "三峡许一跃而过点到者罚一杯回本位",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-004",
+          "panel": "b",
+          "x": 470,
+          "y": 238,
+          "r": 14,
+          "shape": "circle",
+          "label": "中峡",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-005",
+          "panel": "b",
+          "x": 418,
+          "y": 240,
+          "r": 14,
+          "shape": "circle",
+          "label": "下峡",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-006",
+          "panel": "b",
+          "x": 418,
+          "y": 96,
+          "r": 14,
+          "shape": "circle",
+          "label": "摩天岭",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-007",
+          "panel": "b",
+          "x": 419,
+          "y": 168,
+          "r": 14,
+          "shape": "circle",
+          "label": "滟滪",
+          "note": "",
+          "status": "pending",
+          "allusion": "滟滪堆，重庆奉节东长江瞿塘峡口的一块巨石"
+        },
+        {
+          "id": "b-008",
+          "panel": "b",
+          "x": 307,
+          "y": 97,
+          "r": 14,
+          "shape": "circle",
+          "label": "磻溪",
+          "note": "渔父至此一杯",
+          "status": "pending",
+          "allusion": "传姜太公钓鱼处（陕西宝鸡一带磻溪）。"
+        },
+        {
+          "id": "b-009",
+          "panel": "b",
+          "x": 210,
+          "y": 93,
+          "r": 14,
+          "shape": "circle",
+          "label": "连云栈",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-010",
+          "panel": "b",
+          "x": 101,
+          "y": 90,
+          "r": 14,
+          "shape": "circle",
+          "label": "回马岭",
+          "note": "到此后一掷，回马逆行",
+          "status": "pending",
+          "allusion": "泰山等地有回马岭地名；图中作「掷回马逆行」机关，典故从略。"
+        },
+        {
+          "id": "b-011",
+          "panel": "b",
+          "x": 100,
+          "y": 159,
+          "r": 14,
+          "shape": "circle",
+          "label": "题柱桥",
+          "note": "词客至此一杯，回马至此罚三杯",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-012",
+          "panel": "b",
+          "x": 208,
+          "y": 169,
+          "r": 14,
+          "shape": "circle",
+          "label": "吴山",
+          "note": "",
+          "status": "pending",
+          "allusion": "杭州吴山。"
+        },
+        {
+          "id": "b-013",
+          "panel": "b",
+          "x": 315,
+          "y": 168,
+          "r": 14,
+          "shape": "circle",
+          "label": "黄粱梦",
+          "note": "羽士一杯",
+          "status": "pending",
+          "allusion": "沈既济《枕中记》邯郸黄粱梦。"
+        },
+        {
+          "id": "b-014",
+          "panel": "b",
+          "x": 312,
+          "y": 239,
+          "r": 14,
+          "shape": "circle",
+          "label": "峨眉山",
+          "note": "缁衣一杯",
+          "status": "pending",
+          "allusion": "四川峨眉山；佛教名山。"
+        },
+        {
+          "id": "b-015",
+          "panel": "b",
+          "x": 210,
+          "y": 239,
+          "r": 14,
+          "shape": "circle",
+          "label": "铜雀台",
+          "note": "美人一杯",
+          "status": "pending",
+          "allusion": "曹操建铜雀台于邺；唐人诗咏铜雀妓。"
+        },
+        {
+          "id": "b-016",
+          "panel": "b",
+          "x": 105,
+          "y": 233,
+          "r": 14,
+          "shape": "circle",
+          "label": "蓬莱",
+          "note": "至此一杯，会各一杯",
+          "status": "pending",
+          "allusion": "海上三神山之一；秦汉求仙传说。"
+        },
+        {
+          "id": "b-017",
+          "panel": "b",
+          "x": 103,
+          "y": 310,
+          "r": 14,
+          "shape": "circle",
+          "label": "黄山",
+          "note": "至此一杯，美人免饮",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-018",
+          "panel": "b",
+          "x": 104,
+          "y": 382,
+          "r": 14,
+          "shape": "circle",
+          "label": "武夷",
+          "note": "",
+          "status": "pending",
+          "allusion": "福建武夷山。"
+        },
+        {
+          "id": "b-019",
+          "panel": "b",
+          "x": 107,
+          "y": 455,
+          "r": 14,
+          "shape": "circle",
+          "label": "七星岩",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-020",
+          "panel": "b",
+          "x": 102,
+          "y": 532,
+          "r": 14,
+          "shape": "circle",
+          "label": "九岳山一？",
+          "note": "点到一杯入九岳山路，唯渔父径入桃源",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-021",
+          "panel": "b",
+          "x": 102,
+          "y": 603,
+          "r": 14,
+          "shape": "circle",
+          "label": "桃源",
+          "note": "渔父至此一杯",
+          "status": "pending",
+          "allusion": "陶渊明《桃花源记》。"
+        },
+        {
+          "id": "b-022",
+          "panel": "b",
+          "x": 102,
+          "y": 679,
+          "r": 14,
+          "shape": "circle",
+          "label": "黄鹊楼",
+          "note": "至此一杯，会此一杯",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-023",
+          "panel": "b",
+          "x": 103,
+          "y": 738,
+          "r": 14,
+          "shape": "circle",
+          "label": "太华",
+          "note": "",
+          "status": "pending",
+          "allusion": "西岳华山（太华）。"
+        },
+        {
+          "id": "b-024",
+          "panel": "b",
+          "x": 102,
+          "y": 817,
+          "r": 14,
+          "shape": "circle",
+          "label": "陈仓",
+          "note": "止许暗度，点到罚二杯回本位",
+          "status": "pending",
+          "allusion": "暗度陈仓；韩信出汉中故事。"
+        },
+        {
+          "id": "b-025",
+          "panel": "b",
+          "x": 210,
+          "y": 819,
+          "r": 14,
+          "shape": "circle",
+          "label": "烟雨楼",
+          "note": "",
+          "status": "pending",
+          "allusion": "嘉兴南湖烟雨楼较著名；他处亦有同名楼，是否即此待核。"
+        },
+        {
+          "id": "b-026",
+          "panel": "b",
+          "x": 308,
+          "y": 823,
+          "r": 14,
+          "shape": "circle",
+          "label": "琵琶亭",
+          "note": "词客、美人会此各一杯",
+          "status": "pending",
+          "allusion": "九江琵琶亭；白居易《琵琶行》「江州司马」故事所系。"
+        },
+        {
+          "id": "b-027",
+          "panel": "b",
+          "x": 421,
+          "y": 825,
+          "r": 14,
+          "shape": "circle",
+          "label": "九折坡一",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-028",
+          "panel": "b",
+          "x": 487,
+          "y": 817,
+          "r": 14,
+          "shape": "circle",
+          "label": "二",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-029",
+          "panel": "b",
+          "x": 556,
+          "y": 824,
+          "r": 14,
+          "shape": "circle",
+          "label": "三",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-030",
+          "panel": "b",
+          "x": 623,
+          "y": 820,
+          "r": 14,
+          "shape": "circle",
+          "label": "四",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-031",
+          "panel": "b",
+          "x": 621,
+          "y": 783,
+          "r": 14,
+          "shape": "circle",
+          "label": "五",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-032",
+          "panel": "b",
+          "x": 620,
+          "y": 746,
+          "r": 14,
+          "shape": "circle",
+          "label": "六",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-033",
+          "panel": "b",
+          "x": 554,
+          "y": 747,
+          "r": 14,
+          "shape": "circle",
+          "label": "七",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-034",
+          "panel": "b",
+          "x": 482,
+          "y": 750,
+          "r": 14,
+          "shape": "circle",
+          "label": "八",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-035",
+          "panel": "b",
+          "x": 415,
+          "y": 750,
+          "r": 14,
+          "shape": "circle",
+          "label": "九",
+          "note": "",
+          "status": "pending",
+          "allusion": ""
+        },
+        {
+          "id": "b-036",
+          "panel": "b",
+          "x": 315,
+          "y": 745,
+          "r": 14,
+          "shape": "circle",
+          "label": "燕子矶",
+          "note": "",
+          "status": "pending",
+          "allusion": "南京长江边燕子矶；矶石形如展翅燕子。"
+        },
+        {
+          "id": "b-037",
+          "panel": "b",
+          "x": 208,
+          "y": 747,
+          "r": 14,
+          "shape": "circle",
+          "label": "岳阳楼",
+          "note": "至此一杯，会各一杯",
+          "allusion": "洞庭湖畔岳阳楼；范仲淹《岳阳楼记》。",
+          "status": "pending"
+        },
+        {
+          "id": "b-038",
+          "panel": "b",
+          "x": 207,
+          "y": 675,
+          "r": 14,
+          "shape": "circle",
+          "label": "金山",
+          "note": "词客、缁衣至此一杯",
+          "allusion": "镇江金山；白蛇传水漫金山等故事所附。",
+          "status": "pending"
+        },
+        {
+          "id": "b-039",
+          "panel": "b",
+          "x": 209,
+          "y": 602,
+          "r": 14,
+          "shape": "circle",
+          "label": "凤凰台",
+          "note": "",
+          "allusion": "南京凤凰台；李白《登金陵凤凰台》。",
+          "status": "pending"
+        },
+        {
+          "id": "b-040",
+          "panel": "b",
+          "x": 311,
+          "y": 603,
+          "r": 14,
+          "shape": "circle",
+          "label": "龙虎山",
+          "note": "羽士至此一杯",
+          "allusion": "江西龙虎山；道教名山，正一派祖庭。",
+          "status": "pending"
+        },
+        {
+          "id": "b-041",
+          "panel": "b",
+          "x": 311,
+          "y": 674,
+          "r": 14,
+          "shape": "circle",
+          "label": "兰亭",
+          "note": "词客至此一杯",
+          "allusion": "会稽山阴兰亭；王羲之《兰亭集序》雅集处。",
+          "status": "pending"
+        },
+        {
+          "id": "b-042",
+          "panel": "b",
+          "x": 415,
+          "y": 675,
+          "r": 14,
+          "shape": "circle",
+          "label": "黄金台",
+          "note": "词客、剑侠至此一杯",
+          "allusion": "",
+          "status": "pending"
+        },
+        {
+          "id": "b-043",
+          "panel": "b",
+          "x": 523,
+          "y": 675,
+          "r": 14,
+          "shape": "circle",
+          "label": "长安市",
+          "note": "至此一杯、会各一杯",
+          "allusion": "长安市井；李白「长安市上酒家眠」一类书写所依。",
+          "status": "pending"
+        },
+        {
+          "id": "b-044",
+          "panel": "b",
+          "x": 642,
+          "y": 670,
+          "r": 14,
+          "shape": "circle",
+          "label": "观止",
+          "note": "点到方许完，如有赊点罚一杯回本位",
+          "allusion": "终局格名；语出「叹为观止」一类用法，具体是否即本图终点待核。",
+          "status": "pending"
+        },
+        {
+          "id": "b-045",
+          "panel": "b",
+          "x": 209,
+          "y": 454,
+          "r": 14,
+          "shape": "circle",
+          "label": "二",
+          "note": "",
+          "allusion": "",
+          "status": "pending"
+        },
+        {
+          "id": "b-046",
+          "panel": "b",
+          "x": 206,
+          "y": 376,
+          "r": 14,
+          "shape": "circle",
+          "label": "三",
+          "note": "",
+          "allusion": "",
+          "status": "pending"
+        },
+        {
+          "id": "b-047",
+          "panel": "b",
+          "x": 210,
+          "y": 310,
+          "r": 14,
+          "shape": "circle",
+          "label": "四",
+          "note": "",
+          "allusion": "",
+          "status": "pending"
+        },
+        {
+          "id": "b-048",
+          "panel": "b",
+          "x": 313,
+          "y": 313,
+          "r": 14,
+          "shape": "circle",
+          "label": "五",
+          "note": "",
+          "allusion": "",
+          "status": "pending"
+        },
+        {
+          "id": "b-049",
+          "panel": "b",
+          "x": 314,
+          "y": 381,
+          "r": 14,
+          "shape": "circle",
+          "label": "六",
+          "note": "",
+          "allusion": "",
+          "status": "pending"
+        },
+        {
+          "id": "b-050",
+          "panel": "b",
+          "x": 311,
+          "y": 459,
+          "r": 14,
+          "shape": "circle",
+          "label": "七",
+          "note": "",
+          "allusion": "",
+          "status": "pending"
+        },
+        {
+          "id": "b-051",
+          "panel": "b",
+          "x": 311,
+          "y": 529,
+          "r": 14,
+          "shape": "circle",
+          "label": "八",
+          "note": "",
+          "allusion": "",
+          "status": "pending"
+        },
+        {
+          "id": "b-052",
+          "panel": "b",
+          "x": 207,
+          "y": 530,
+          "r": 14,
+          "shape": "circle",
+          "label": "九",
+          "note": "",
+          "allusion": "",
+          "status": "pending"
+        }
+      ],
+      "edges": [
+        {
+          "from": "b-008",
+          "to": "b-009"
+        },
+        {
+          "from": "b-010",
+          "to": "b-011"
+        },
+        {
+          "from": "b-009",
+          "to": "b-010"
+        },
+        {
+          "from": "b-011",
+          "to": "b-012"
+        },
+        {
+          "from": "b-012",
+          "to": "b-013"
+        },
+        {
+          "from": "b-013",
+          "to": "b-014"
+        },
+        {
+          "from": "b-014",
+          "to": "b-015"
+        },
+        {
+          "from": "b-015",
+          "to": "b-016"
+        },
+        {
+          "from": "b-016",
+          "to": "b-017"
+        },
+        {
+          "from": "b-017",
+          "to": "b-018"
+        },
+        {
+          "from": "b-018",
+          "to": "b-019"
+        },
+        {
+          "from": "b-019",
+          "to": "b-020"
+        },
+        {
+          "from": "b-020",
+          "to": "b-045"
+        },
+        {
+          "from": "b-020",
+          "to": "b-021"
+        },
+        {
+          "from": "b-021",
+          "to": "b-052"
+        },
+        {
+          "from": "b-045",
+          "to": "b-046"
+        },
+        {
+          "from": "b-046",
+          "to": "b-047"
+        },
+        {
+          "from": "b-047",
+          "to": "b-048"
+        },
+        {
+          "from": "b-048",
+          "to": "b-049"
+        },
+        {
+          "from": "b-049",
+          "to": "b-050"
+        },
+        {
+          "from": "b-050",
+          "to": "b-051"
+        },
+        {
+          "from": "b-051",
+          "to": "b-052"
+        },
+        {
+          "from": "b-021",
+          "to": "b-022"
+        },
+        {
+          "from": "b-022",
+          "to": "b-023"
+        },
+        {
+          "from": "b-024",
+          "to": "b-025"
+        },
+        {
+          "from": "b-023",
+          "to": "b-024"
+        },
+        {
+          "from": "b-025",
+          "to": "b-026"
+        },
+        {
+          "from": "b-026",
+          "to": "b-027"
+        },
+        {
+          "from": "b-027",
+          "to": "b-028"
+        },
+        {
+          "from": "b-028",
+          "to": "b-029"
+        },
+        {
+          "from": "b-029",
+          "to": "b-030"
+        },
+        {
+          "from": "b-030",
+          "to": "b-031"
+        },
+        {
+          "from": "b-031",
+          "to": "b-032"
+        },
+        {
+          "from": "b-032",
+          "to": "b-033"
+        },
+        {
+          "from": "b-033",
+          "to": "b-034"
+        },
+        {
+          "from": "b-034",
+          "to": "b-035"
+        },
+        {
+          "from": "b-035",
+          "to": "b-036"
+        },
+        {
+          "from": "b-036",
+          "to": "b-037"
+        },
+        {
+          "from": "b-037",
+          "to": "b-038"
+        },
+        {
+          "from": "b-038",
+          "to": "b-039"
+        },
+        {
+          "from": "b-039",
+          "to": "b-040"
+        },
+        {
+          "from": "b-040",
+          "to": "b-041"
+        },
+        {
+          "from": "b-041",
+          "to": "b-042"
+        },
+        {
+          "from": "b-042",
+          "to": "b-043"
+        },
+        {
+          "from": "b-043",
+          "to": "b-044"
+        },
+        {
+          "from": "b-006",
+          "to": "b-008"
+        },
+        {
+          "from": "b-007",
+          "to": "b-006"
+        },
+        {
+          "from": "b-005",
+          "to": "b-007"
+        },
+        {
+          "from": "b-004",
+          "to": "b-005"
+        },
+        {
+          "from": "b-003",
+          "to": "b-004"
+        },
+        {
+          "from": "b-001",
+          "to": "b-002"
+        }
+      ]
+    }
+  },
+  "spreadOrder": "ba",
+  "crossEdges": [
+    {
+      "from": "b-001",
+      "to": "a-022"
+    },
+    {
+      "from": "b-002",
+      "to": "a-023"
+    },
+    {
+      "from": "b-003",
+      "to": "a-059"
+    }
+  ]
+}

@@ -1022,6 +1022,12 @@
       }
     }
     if (!state.data) {
+      try {
+        const cells = await fetch("./zhiyin-cells.json");
+        if (cells.ok) state.data = await cells.json();
+      } catch (_) {}
+    }
+    if (!state.data) {
       const res = await fetch("./zhiyin-seed.json");
       state.data = await res.json();
     }
