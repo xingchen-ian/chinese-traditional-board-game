@@ -9,9 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/site.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="../assets/vendor/leaflet/leaflet.css">
   <script src="../assets/site.js" defer></script>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head>
 <body>
   <a class="skip" href="#content">跳到正文</a>
@@ -31,6 +30,7 @@
           <li><a href="../shengguan/play.html">升官试用</a></li>
           <li><a href="zhiyin/play.html">掷饮试用</a></li>
           <li><a href="zhiyin/transcribe.html">录文台</a></li>
+          <li><a href="#places-map">地名今地</a></li>
         </ul>
       </nav>
     </header>
@@ -163,15 +163,13 @@
       <p>最近更新：2026年11月。</p>
     </footer>
   </div>
+  <script src="../assets/vendor/leaflet/leaflet.js"></script>
   <script>
     (function () {
       const statusEl = document.getElementById("places-map-status");
       const mapEl = document.getElementById("places-map-el");
       const tbody = document.querySelector("#places-table tbody");
-      if (!mapEl || !tbody || typeof L === "undefined") {
-        if (statusEl) statusEl.textContent = "地图库未载入。";
-        return;
-      }
+      if (!mapEl || !tbody) return;
 
       const pinColor = {
         "较确": "#1a4a40",
@@ -180,14 +178,55 @@
         "—": "#5c584f"
       };
 
-      function markerIcon(confidence) {
-        const fill = pinColor[confidence] || pinColor["约"];
-        return L.divIcon({
-          className: "places-marker",
-          html: '<span style="background:' + fill + '"></span>',
-          iconSize: [14, 14],
-          iconAnchor: [7, 7]
+      function fillTable(places) {
+        tbody.textContent = "";
+        places
+          .slice()
+          .sort(function (a, b) {
+            return String(a.label).localeCompare(String(b.label), "zh");
+          })
+          .forEach(function (p) {
+            const tr = document.createElement("tr");
+            if (p.confidence === "待核") tr.className = "pending-row";
+            tr.innerHTML =
+              "<th scope='row'>" + p.label + "</th>" +
+              "<td>" + (p.modern || "—") + "</td>" +
+              "<td>" + (p.confidence || "—") + "</td>" +
+              "<td>" + (p.allusion || "") + "</td>";
+            tbody.appendChild(tr);
+          });
+      }
+
+      function drawMap(mapped) {
+        if (typeof L === "undefined") {
+          statusEl.textContent += " 地图库未载入，表仍可看。";
+          return;
+        }
+        const map = L.map(mapEl, { scrollWheelZoom: false }).setView([33.5, 113], 5);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 18,
+          attribution: "&copy; OpenStreetMap"
+        }).addTo(map);
+        const bounds = [];
+        mapped.forEach(function (p) {
+          const fill = pinColor[p.confidence] || pinColor["约"];
+          const m = L.marker([p.lat, p.lng], {
+            icon: L.divIcon({
+              className: "places-marker",
+              html: '<span style="background:' + fill + '"></span>',
+              iconSize: [14, 14],
+              iconAnchor: [7, 7]
+            })
+          }).addTo(map);
+          m.bindPopup(
+            "<strong>" + p.label + "</strong><br>" +
+            (p.modern || "") +
+            (p.allusion ? "<br><span class='popup-note'>" + p.allusion + "</span>" : "") +
+            "<br><span class='popup-note'>" + (p.confidence || "") + "</span>"
+          );
+          bounds.push([p.lat, p.lng]);
         });
+        if (bounds.length) map.fitBounds(bounds, { padding: [28, 28], maxZoom: 6 });
       }
 
       fetch("places-geo.json")
@@ -203,41 +242,8 @@
           statusEl.textContent =
             (data.note || "") +
             " 已定点 " + mapped.length + " 处，表内共 " + places.length + " 条。";
-
-          const map = L.map(mapEl, { scrollWheelZoom: false }).setView([33.5, 113], 5);
-          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            maxZoom: 18,
-            attribution: "&copy; OpenStreetMap"
-          }).addTo(map);
-
-          const bounds = [];
-          mapped.forEach(function (p) {
-            const m = L.marker([p.lat, p.lng], { icon: markerIcon(p.confidence) }).addTo(map);
-            m.bindPopup(
-              "<strong>" + p.label + "</strong><br>" +
-              (p.modern || "") +
-              (p.allusion ? "<br><span class='popup-note'>" + p.allusion + "</span>" : "") +
-              "<br><span class='popup-note'>" + (p.confidence || "") + "</span>"
-            );
-            bounds.push([p.lat, p.lng]);
-          });
-          if (bounds.length) map.fitBounds(bounds, { padding: [28, 28], maxZoom: 6 });
-
-          places
-            .slice()
-            .sort(function (a, b) {
-              return String(a.label).localeCompare(String(b.label), "zh");
-            })
-            .forEach(function (p) {
-              const tr = document.createElement("tr");
-              if (p.confidence === "待核") tr.className = "pending-row";
-              tr.innerHTML =
-                "<th scope='row'>" + p.label + "</th>" +
-                "<td>" + (p.modern || "—") + "</td>" +
-                "<td>" + (p.confidence || "—") + "</td>" +
-                "<td>" + (p.allusion || "") + "</td>";
-              tbody.appendChild(tr);
-            });
+          fillTable(places);
+          drawMap(mapped);
         })
         .catch(function (err) {
           statusEl.textContent = "地点数据载入失败：" + err.message;
