@@ -1071,8 +1071,10 @@
         if (!n.panel) n.panel = pid;
       }
     }
-    // 把站点录文落到本机，避免下次又被空缓存挡住
-    if (nodeCount(state.data) > 0) save();
+    // 存本地失败也不能挡住画布（隐私模式／配额满时 setItem 会抛错）
+    try {
+      if (nodeCount(state.data) > 0) persist();
+    } catch (_) {}
     setMode("add");
     setPanel("ab");
   }
@@ -1083,11 +1085,16 @@
       if (!cells.ok) throw new Error("HTTP " + cells.status);
       const remote = await cells.json();
       if (nodeCount(remote) === 0) throw new Error("站点文件没有格子");
-      if (!confirm("用站点录文覆盖本机缓存？（当前本机 " + nodeCount(state.data) + " 格 → 站点 " + nodeCount(remote) + " 格）")) return;
+      const cur = nodeCount(state.data);
+      if (cur > 0 && !confirm("用站点录文覆盖本机缓存？（当前本机 " + cur + " 格 → 站点 " + nodeCount(remote) + " 格）")) return;
       state.data = remote;
+      if (!state.data.panels) state.data.panels = {};
+      if (!state.data.panels.a) state.data.panels.a = { width: 652, height: 896, nodes: [], edges: [] };
+      if (!state.data.panels.b) state.data.panels.b = { width: 648, height: 910, nodes: [], edges: [] };
       state.data.panels.a.image = "./assets/zhiyin-panel-a.jpg";
       state.data.panels.b.image = "./assets/zhiyin-panel-b.jpg";
-      save();
+      if (!Array.isArray(state.data.crossEdges)) state.data.crossEdges = [];
+      try { persist(); } catch (_) {}
       setPanel("ab");
       alert("已载入站点录文：" + nodeCount(state.data) + " 格。");
     } catch (err) {
@@ -1095,7 +1102,10 @@
     }
   });
 
-  boot();
+  boot().catch((err) => {
+    console.error(err);
+    alert("录文台启动失败：" + (err && err.message ? err.message : err));
+  });
   </script>
 </body>
 </html>
