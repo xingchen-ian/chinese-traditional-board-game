@@ -233,6 +233,7 @@
     <button type="button" id="btn-export">导出 JSON</button>
     <label class="file">导入 JSON<input type="file" id="import" accept="application/json,.json"></label>
     <button type="button" id="btn-save">存本地</button>
+    <button type="button" id="btn-load-site" title="丢弃空缓存，重新载入站点 zhiyin-cells.json">载入站点录文</button>
   </div>
 
   <div class="layout">
@@ -272,7 +273,7 @@
   </div>
 
   <script>
-  const STORAGE_KEY = "zhiyin-transcribe-v1";
+  const STORAGE_KEY = "zhiyin-transcribe-v2";
   // 只收常见、把握较大的地名典故；数字格／不确定格名不写。
   // 简繁异体靠 normalizeLabel 对齐。不是印本旁注，也不是已核文献结论。
   const ALLUSION_MAP = {
@@ -1012,22 +1013,41 @@
     }
   });
 
+  function nodeCount(data) {
+    if (!data || !data.panels) return 0;
+    const a = (data.panels.a && data.panels.a.nodes) || [];
+    const b = (data.panels.b && data.panels.b.nodes) || [];
+    return a.length + b.length;
+  }
+
   async function boot() {
+    let local = null;
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
-      try {
-        state.data = JSON.parse(saved);
-      } catch (_) {
-        state.data = null;
+      try { local = JSON.parse(saved); } catch (_) { local = null; }
+    }
+    // 兼容旧键：若 v2 空而 v1 有格，先拿来比
+    if (nodeCount(local) === 0) {
+      const legacy = localStorage.getItem("zhiyin-transcribe-v1");
+      if (legacy) {
+        try {
+          const old = JSON.parse(legacy);
+          if (nodeCount(old) > 0) local = old;
+        } catch (_) {}
       }
     }
-    if (!state.data) {
-      try {
-        const cells = await fetch("./zhiyin-cells.json");
-        if (cells.ok) state.data = await cells.json();
-      } catch (_) {}
-    }
-    if (!state.data) {
+    let remote = null;
+    try {
+      const cells = await fetch("./zhiyin-cells.json?v=20261125");
+      if (cells.ok) remote = await cells.json();
+    } catch (_) {}
+    const lc = nodeCount(local);
+    const rc = nodeCount(remote);
+    // 空的本机缓存不要盖住站点上的完整录文
+    if (rc > lc) state.data = remote;
+    else if (local) state.data = local;
+    else if (remote) state.data = remote;
+    else {
       const res = await fetch("./zhiyin-seed.json");
       state.data = await res.json();
     }
@@ -1051,9 +1071,29 @@
         if (!n.panel) n.panel = pid;
       }
     }
+    // 把站点录文落到本机，避免下次又被空缓存挡住
+    if (nodeCount(state.data) > 0) save();
     setMode("add");
     setPanel("ab");
   }
+
+  document.getElementById("btn-load-site").addEventListener("click", async () => {
+    try {
+      const cells = await fetch("./zhiyin-cells.json?v=20261125");
+      if (!cells.ok) throw new Error("HTTP " + cells.status);
+      const remote = await cells.json();
+      if (nodeCount(remote) === 0) throw new Error("站点文件没有格子");
+      if (!confirm("用站点录文覆盖本机缓存？（当前本机 " + nodeCount(state.data) + " 格 → 站点 " + nodeCount(remote) + " 格）")) return;
+      state.data = remote;
+      state.data.panels.a.image = "./assets/zhiyin-panel-a.jpg";
+      state.data.panels.b.image = "./assets/zhiyin-panel-b.jpg";
+      save();
+      setPanel("ab");
+      alert("已载入站点录文：" + nodeCount(state.data) + " 格。");
+    } catch (err) {
+      alert("载入失败：" + err.message);
+    }
+  });
 
   boot();
   </script>

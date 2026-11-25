@@ -302,7 +302,8 @@
   </div>
 
   <script>
-  const TRANSCRIBE_KEY = "zhiyin-transcribe-v1";
+  const TRANSCRIBE_KEY = "zhiyin-transcribe-v2";
+  const TRANSCRIBE_KEY_LEGACY = "zhiyin-transcribe-v1";
   const ROLES = ["渔父", "羽士", "剑侠", "美人", "缁衣", "词客"];
   const ROLE_COLORS = {
     渔父: "#2c6aa0",
@@ -1230,15 +1231,34 @@
     evt.target.value = "";
   });
 
+  function nodeCount(data) {
+    if (!data || !data.panels) return 0;
+    const a = (data.panels.a && data.panels.a.nodes) || [];
+    const b = (data.panels.b && data.panels.b.nodes) || [];
+    return a.length + b.length;
+  }
+
+  function readTranscribeStorage() {
+    for (const key of [TRANSCRIBE_KEY, TRANSCRIBE_KEY_LEGACY]) {
+      const raw = localStorage.getItem(key);
+      if (!raw) continue;
+      try {
+        const data = JSON.parse(raw);
+        if (nodeCount(data) > 0) return data;
+      } catch (_) {}
+    }
+    return null;
+  }
+
   document.getElementById("btn-from-transcribe").addEventListener("click", () => {
-    const raw = localStorage.getItem(TRANSCRIBE_KEY);
-    if (!raw) {
-      say("本机没有录文台数据。请先在同端口打开录文台，或导入 JSON。");
+    const data = readTranscribeStorage();
+    if (!data) {
+      say("本机没有录文台数据。请先在同站点打开录文台，或导入 JSON。");
       return;
     }
     try {
-      setData(JSON.parse(raw));
-      say("已从录文台读取。");
+      setData(data);
+      say("已从录文台读取（" + nodeCount(data) + " 格）。");
     } catch (err) {
       say("录文台数据读失败：" + err.message);
     }
@@ -1246,22 +1266,29 @@
 
   async function boot() {
     buildNameFields();
-    const raw = localStorage.getItem(TRANSCRIBE_KEY);
-    if (raw) {
-      try {
-        setData(JSON.parse(raw));
-        say("已自动载入录文台棋盘。开局即可。");
-        return;
-      } catch (_) {}
-    }
+    const local = readTranscribeStorage();
+    let remote = null;
     try {
-      const res = await fetch("./zhiyin-cells.json");
-      if (res.ok) {
-        setData(await res.json());
-        say("已载入 zhiyin-cells.json。");
-        return;
-      }
+      const res = await fetch("./zhiyin-cells.json?v=20261125");
+      if (res.ok) remote = await res.json();
     } catch (_) {}
+    const lc = nodeCount(local);
+    const rc = nodeCount(remote);
+    if (rc > lc && remote) {
+      setData(remote);
+      say("已载入站点录文（" + rc + " 格）。开局即可。");
+      return;
+    }
+    if (local) {
+      setData(local);
+      say("已自动载入录文台棋盘（" + lc + " 格）。开局即可。");
+      return;
+    }
+    if (remote) {
+      setData(remote);
+      say("已载入 zhiyin-cells.json。");
+      return;
+    }
     try {
       const seed = await fetch("./zhiyin-seed.json");
       if (seed.ok) {
