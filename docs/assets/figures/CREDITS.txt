@@ -6,10 +6,11 @@ goose-met-dp867954.jpg
   File: https://commons.wikimedia.org/wiki/File:Game_of_the_Goose_MET_DP867954.jpg
   License: CC0 1.0
 
-goose-1850.png
+goose-1850.jpg
   Source: Swiss Museum of Games via Wikimedia Commons
   File: https://commons.wikimedia.org/wiki/File:Game_of_the_Goose_(from_1850).png
   License: Attribution required (copyright holder allows use with attribution)
+  Note: recompressed to JPEG for web size
 
 shengguan-tu-commons.png
   Source: Wikimedia Commons
