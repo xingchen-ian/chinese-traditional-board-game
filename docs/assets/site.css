@@ -315,9 +315,8 @@ figure.fig figcaption .src {
 .places-map-svg {
   height: auto;
   min-height: 0;
-  padding: 0.35rem;
-  background:
-    linear-gradient(180deg, #eef1ec 0%, #e7ebe4 55%, #e2e6df 100%);
+  padding: 0.5rem 0.35rem 0.2rem;
+  background: #f3f1eb;
 }
 
 .places-map-svg svg {
@@ -327,9 +326,9 @@ figure.fig figcaption .src {
 }
 
 .places-map-svg .china-land {
-  fill: #d8d3c8;
-  stroke: #6f6a60;
-  stroke-width: 1.1;
+  fill: #e5e1d7;
+  stroke: #b7b1a4;
+  stroke-width: 1;
   stroke-linejoin: round;
 }
 

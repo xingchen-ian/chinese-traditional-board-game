@@ -123,7 +123,7 @@
       <p class="aside">吴本定马见识典书号 HY6663。<a href="https://www.shidianguji.com/book/HY6663/chapter/1kv0646r3ounn">打开这一章</a>，<a href="https://www.shidianguji.com/book/HY6663">书页</a>。高兆本定马见识典书号 ZDCS11036。<a href="https://www.shidianguji.com/book/ZDCS11036/chapter/1mjax1ipe14p6">打开这一章</a>，<a href="https://www.shidianguji.com/book/ZDCS11036">书页</a>。NCL153500022A 的现有 OCR 里没有看到定马句。<a href="https://www.shidianguji.com/book/NCL153500022A/chapter/1m0vc6aek2x46">打开这一章</a>，<a href="https://www.shidianguji.com/book/NCL153500022A">书页</a>。这三个书号都是识典编号，不是哈佛燕京索书号。ZDCS11036 与 NCL153500022A 也还没有鉴定为同一印本，更没有写成「高兆原刻本」。</p>
 
       <h2 id="places-map">圆格地名今地</h2>
-      <p class="measure">把掷饮录文台里已标的地名，约标在中国轮廓图上，并附表。不依赖在线底图。坐标是总览约位；同名多处、传说地或格名残泐的标「待核」。编号折、羊肠道等机关格不画点。点选圆点可看备注。</p>
+      <p class="measure">把掷饮录文台里已标的地名，约标在极简中国示意轮廓上，并附表。只看相对位置，不做精确底图。同名多处、传说地或格名残泐的标「待核」。编号折等机关格不画点。点选圆点可看备注。</p>
       <p class="aside" id="places-map-status">正在载入地点数据…</p>
       <div id="places-map-el" class="places-map places-map-svg" role="region" aria-label="圆格地名中国轮廓图"></div>
       <p class="aside" id="places-map-detail" hidden></p>
@@ -320,7 +320,7 @@
           });
           statusEl.textContent =
             (data.note || "") +
-            " 已定点 " + mapped.length + " 处，表内共 " + places.length + " 条。轮廓为简化国界，仅供总览。";
+            " 已定点 " + mapped.length + " 处，表内共 " + places.length + " 条。";
           fillTable(places);
           drawMap(outline, mapped);
         })
