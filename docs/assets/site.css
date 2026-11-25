@@ -304,9 +304,68 @@ figure.fig figcaption .src {
   html { scroll-behavior: auto; }
 }
 
+.places-map {
+  height: min(28rem, 70vh);
+  margin: 0.75rem 0 0.4rem;
+  border: 1px solid var(--line);
+  background: #eceae4;
+  z-index: 0;
+}
+
+.places-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin: 0.35rem 0 0.8rem;
+  font-size: 0.82rem;
+}
+
+.places-legend .pin {
+  display: inline-block;
+  width: 0.65rem;
+  height: 0.65rem;
+  margin-right: 0.35rem;
+  border-radius: 50%;
+  vertical-align: 0.05em;
+}
+
+.places-legend .pin-ok { background: #1a4a40; }
+.places-legend .pin-approx { background: #6b5a3e; }
+.places-legend .pin-pending { background: #8a4b3a; }
+
+.places-marker {
+  background: transparent;
+  border: 0;
+}
+
+.places-marker span {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #f7f6f2;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(28, 27, 24, 0.25);
+}
+
+.leaflet-popup-content {
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  line-height: 1.45;
+  margin: 0.55rem 0.7rem;
+}
+
+.leaflet-popup-content .popup-note {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.places-table-wrap table { min-width: 40rem; }
+tr.pending-row th, tr.pending-row td { color: var(--muted); }
+
 @media print {
   body { background: #fff; }
   .sheet { border: 0; margin: 0; width: auto; }
   .nav-toggle, .skip, .site-nav { display: none !important; }
   a { color: inherit; }
+  .places-map { display: none; }
 }
